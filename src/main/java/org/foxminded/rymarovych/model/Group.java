@@ -21,6 +21,8 @@ public class Group {
     @Column(name = "speciality")
     private String speciality;
 
+    @Column(name = "year")
+    private int year;
 
     @OneToMany(mappedBy = "group")
     private List<Student> students = new ArrayList<>();
@@ -39,15 +41,17 @@ public class Group {
     public Group() {
     }
 
-    public Group(String name, String speciality) {
+    public Group(String name, String speciality, int year) {
         this.name = name;
         this.speciality = speciality;
+        this.year = year;
     }
 
-    public Group(Long id, String name, String speciality) {
+    public Group(Long id, String name, String speciality, int year) {
         this.id = id;
         this.name = name;
         this.speciality = speciality;
+        this.year = year;
     }
 
     public Long getId() {
@@ -74,6 +78,14 @@ public class Group {
         this.speciality = speciality;
     }
 
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
     public List<Student> getStudents() {
         return students;
     }
@@ -97,6 +109,7 @@ public class Group {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", speciality='" + speciality + '\'' +
+                ", year='" + year + '\'' +
                 '}';
     }
 }

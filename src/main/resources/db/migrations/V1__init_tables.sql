@@ -9,14 +9,14 @@ CREATE TABLE IF NOT EXISTS groups
 (
     id         SERIAL PRIMARY KEY,
     name       VARCHAR(20),
-    speciality VARCHAR(50)
+    speciality VARCHAR(50),
+    year       INT
 );
 
 CREATE TABLE IF NOT EXISTS students
 (
     id       SERIAL PRIMARY KEY REFERENCES people,
     group_id INT,
-    year     INT,
     FOREIGN KEY (group_id) REFERENCES groups (id) ON UPDATE CASCADE
 );
 
@@ -29,13 +29,13 @@ CREATE TABLE IF NOT EXISTS teachers
 CREATE TABLE IF NOT EXISTS courses
 (
     id   SERIAL PRIMARY KEY,
-    name VARCHAR(40)
+    name VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS lessons
 (
     id          SERIAL PRIMARY KEY,
-    place       VARCHAR(100),
+    place       VARCHAR(120),
     course_id   INT,
     teacher_id  INT,
     schedule_id INT,

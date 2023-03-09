@@ -9,9 +9,6 @@ import java.util.Set;
 @Table(name = "students")
 public class Student extends Person {
 
-    @Column(name = "year")
-    private int year;
-
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
@@ -30,24 +27,14 @@ public class Student extends Person {
 
     public Student() {}
 
-    public Student(String firstName, String lastName, int year, Group group) {
+    public Student(String firstName, String lastName, Group group) {
         super(firstName, lastName);
-        this.year = year;
         this.group = group;
     }
 
-    public Student(Long id, String firstName, String lastName, int year, Group group) {
+    public Student(Long id, String firstName, String lastName, Group group) {
         super(id, firstName, lastName);
-        this.year = year;
         this.group = group;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
     }
 
     public Group getGroup() {
@@ -70,7 +57,6 @@ public class Student extends Person {
     public String toString() {
         return  "Student{" +
                 super.toString() +
-                ", year=" + year +
                 ", groupId=" + group.getId() +
                 '}';
     }
