@@ -22,7 +22,7 @@ public class Course {
     private List<Lesson> lessons = new ArrayList<>();
 
     @ManyToMany(mappedBy = "courses")
-    private Set<Student> students = new HashSet<>();
+    private Set<Group> groups = new HashSet<>();
 
     @ManyToMany(mappedBy = "courses")
     private Set<Teacher> teachers = new HashSet<>();
@@ -63,12 +63,12 @@ public class Course {
         this.lessons = lessons;
     }
 
-    public Set<Student> getStudents() {
-        return students;
+    public Set<Group> getGroups() {
+        return groups;
     }
 
-    public void setStudents(Set<Student> students) {
-        this.students = students;
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 
     public Set<Teacher> getTeachers() {

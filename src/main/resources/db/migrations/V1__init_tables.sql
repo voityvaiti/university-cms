@@ -48,12 +48,12 @@ CREATE TABLE IF NOT EXISTS schedules_for_days
     day DATE
 );
 
-CREATE TABLE IF NOT EXISTS students_courses
+CREATE TABLE IF NOT EXISTS groups_courses
 (
     id         SERIAL PRIMARY KEY,
-    student_id INT,
+    group_id INT,
     course_id  INT,
-    FOREIGN KEY (student_id) REFERENCES students (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (group_id) REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

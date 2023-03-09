@@ -32,6 +32,17 @@ public class Group {
             CascadeType.PERSIST
     })
     @JoinTable(
+            name = "groups_courses",
+            joinColumns = {@JoinColumn(name = "group_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")}
+    )
+    private Set<Course> courses = new HashSet<>();
+
+    @ManyToMany(cascade = {
+            CascadeType.MERGE,
+            CascadeType.PERSIST
+    })
+    @JoinTable(
             name = "groups_lessons",
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "lesson_id")}
@@ -102,6 +113,13 @@ public class Group {
         this.lessons = lessons;
     }
 
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
 
     @Override
     public String toString() {
