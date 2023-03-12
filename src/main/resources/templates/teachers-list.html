@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Teachers</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+  <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+
+<body class="d-flex justify-content-center">
+
+<div class="w-75 mb-4">
+
+  <h1 class="text-center display-2 mb-4 mt-3">Teachers list:</h1>
+
+  <table class="table">
+
+    <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">First name</th>
+      <th scope="col">Last name</th>
+      <th scope="col">Degree</th>
+    </tr>
+    </thead>
+
+    <tr th:each="teacher: ${teachers}">
+      <th scope="row" th:text="${teacher.getId()}"></th>
+      <th scope="row" th:text="${teacher.getFirstName()}"></th>
+      <th scope="row" th:text="${teacher.getLastName()}"></th>
+      <th scope="row" th:text="${teacher.getDegree()}"></th>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>
