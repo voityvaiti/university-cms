@@ -1,6 +1,5 @@
 package org.foxminded.rymarovych.controller;
 
-import org.foxminded.rymarovych.service.abstractions.StudentService;
 import org.foxminded.rymarovych.service.abstractions.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
