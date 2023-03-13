@@ -18,7 +18,7 @@ public class TeacherController {
         this.teacherService = teacherService;
     }
 
-    @GetMapping("/get-list")
+    @GetMapping("/all")
     public String getList(Model model) {
         model.addAttribute("teachers", teacherService.getAllTeachersList());
         return "teachers-list";

@@ -35,7 +35,7 @@ class TeacherControllerTest {
 
         when(teacherService.getAllTeachersList()).thenReturn(expected);
 
-        this.mvc.perform(get("/teachers/get-list"))
+        this.mvc.perform(get("/teachers/all"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("teachers"))
                 .andExpect(model().attribute("teachers", expected));

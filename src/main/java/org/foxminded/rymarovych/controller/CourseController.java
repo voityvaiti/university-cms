@@ -18,7 +18,7 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @GetMapping("/get-list")
+    @GetMapping("/all")
     public String getList(Model model) {
         model.addAttribute("courses", courseService.getAllCoursesList());
         return "courses-list";

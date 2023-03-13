@@ -36,7 +36,7 @@ class GroupControllerTest {
 
         when(groupService.getAllGroupsList()).thenReturn(expected);
 
-        this.mvc.perform(get("/groups/get-list"))
+        this.mvc.perform(get("/groups/all"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("groups"))
                 .andExpect(model().attribute("groups", expected));

@@ -35,7 +35,7 @@ class CourseControllerTest {
 
         when(courseService.getAllCoursesList()).thenReturn(expected);
 
-        this.mvc.perform(get("/courses/get-list"))
+        this.mvc.perform(get("/courses/all"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("courses"))
                 .andExpect(model().attribute("courses", expected));

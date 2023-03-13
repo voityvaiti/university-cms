@@ -18,7 +18,7 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    @GetMapping("/get-list")
+    @GetMapping("/all")
     public String getList(Model model) {
         model.addAttribute("groups", groupService.getAllGroupsList());
         return "groups-list";
