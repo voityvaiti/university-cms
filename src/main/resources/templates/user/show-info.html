@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Current user</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="w-100 d-flex justify-content-center">
+
+    <div>
+
+        <h1 class="display-4">Profile:</h1>
+
+        <p th:text="${'Username: ' + user.getUsername()}"></p>
+
+        <p th:if="${user.isEnabled()}">Enabled</p>
+        <p th:unless="${user.isEnabled()}">Disabled</p>
+
+        <p th:text="${'Roles: ' + user.getAuthorities()}"></p>
+
+    </div>
+</div>
+
+</body>
+</html>
