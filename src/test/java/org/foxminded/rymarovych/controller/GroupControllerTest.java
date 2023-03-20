@@ -34,7 +34,11 @@ class GroupControllerTest {
     void getList() throws Exception {
 
         List<Group> expected = new ArrayList<>();
-        expected.add(new Group("GH-103", "Musical art", 3));
+
+        Group group = new Group(5L, "GH-103", "Musical art", 3,
+                null, null, null);
+
+        expected.add(group);
 
         when(groupService.getAllGroupsList()).thenReturn(expected);
 

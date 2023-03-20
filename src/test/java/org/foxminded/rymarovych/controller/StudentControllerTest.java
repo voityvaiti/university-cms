@@ -34,7 +34,13 @@ class StudentControllerTest {
     void getList() throws Exception {
 
         List<Student> expected = new ArrayList<>();
-        expected.add(new Student("Some", "Student", new Group()));
+
+        Student student = new Student(1L, "Some", "Student", new Group());
+        student.setFirstName("Some");
+        student.setLastName("Students");
+        student.setGroup(new Group());
+
+        expected.add(student);
 
         when(studentService.getAllStudentsList()).thenReturn(expected);
 

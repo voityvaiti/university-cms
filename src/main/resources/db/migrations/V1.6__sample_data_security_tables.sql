@@ -5,7 +5,7 @@ VALUES ('user1', '$2a$12$7eO87w.rFOeFRH73dgwBO.8vEL4vY7Mxwv4Ba.IcB.sgNKTJQroRW',
        ('user4', '$2a$12$e5854CM310OYZClxzEtBR.qVHSizgX/v1jEyk0HrBgpgafGGkICpC', TRUE);
 
 INSERT INTO users_roles (user_id, role)
-VALUES (1, 'ROLE_STUDENT'),
-       (2, 'ROLE_TEACHER'),
-       (3, 'ROLE_ADMIN'),
-       (4, 'ROLE_STUFF');
+VALUES (1, 'STUDENT'),
+       (2, 'TEACHER'),
+       (3, 'ADMIN'),
+       (4, 'STUFF');

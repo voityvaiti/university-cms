@@ -33,7 +33,12 @@ class TeacherControllerTest {
     void getList() throws Exception {
 
         List<Teacher> expected = new ArrayList<>();
-        expected.add(new Teacher("Some", "Teacher", "Doctor"));
+
+        Teacher teacher = new Teacher(1L, "Some", "Teacher",
+                "Doctor", null, null);
+
+        expected.add(teacher);
+
 
         when(teacherService.getAllTeachersList()).thenReturn(expected);
 

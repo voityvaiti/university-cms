@@ -33,7 +33,10 @@ class CourseControllerTest {
     void getList() throws Exception {
 
         List<Course> expected = new ArrayList<>();
-        expected.add(new Course("Math"));
+
+        Course course = new Course(1L, "Math", null, null, null);
+
+        expected.add(course);
 
         when(courseService.getAllCoursesList()).thenReturn(expected);
 
