@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      style="height: 100%;">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head>
     <meta charset="UTF-8">
     <title>Menu</title>
@@ -36,7 +37,7 @@
         </div>
 
         <div class="col-6 d-flex justify-content-center align-items-center">
-            <a href="/courses/all" class="w-50 btn btn-info border-light text-center text-info"
+            <a href="/courses/" class="w-50 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">Courses</a>
         </div>
 
@@ -44,12 +45,12 @@
 
     <div class="row mb-3">
 
-        <div class="col-6 d-flex justify-content-center align-items-center">
+        <div sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center align-items-center">
             <a href="/users/" class="w-50 btn btn-info border-dark text-center text-info"
                style="background-color: black;">USERS</a>
         </div>
 
-        <div class="col-6 d-flex justify-content-center align-items-center">
+        <div class="col d-flex justify-content-center align-items-center">
             <a href="/users/current" class="w-50 btn btn-info border-dark text-center text-info"
                style="background-color: black;">PROFILE</a>
         </div>

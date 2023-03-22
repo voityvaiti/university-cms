@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,17 +28,21 @@ public class Lesson {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
+    @ToString.Exclude
     private Course course;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
+    @ToString.Exclude
     private Teacher teacher;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
+    @ToString.Exclude
     private ScheduleForDay scheduleForDay;
 
     @ManyToMany(mappedBy = "lessons")
+    @ToString.Exclude
     private Set<Group> groups = new HashSet<>();
 
 }

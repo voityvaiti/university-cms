@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ public class Group {
     private int year;
 
     @OneToMany(mappedBy = "group")
+    @ToString.Exclude
     private List<Student> students = new ArrayList<>();
 
     @ManyToMany(cascade = {
@@ -42,6 +44,7 @@ public class Group {
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id")}
     )
+    @ToString.Exclude
     private Set<Course> courses = new HashSet<>();
 
     @ManyToMany(cascade = {
@@ -53,6 +56,7 @@ public class Group {
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "lesson_id")}
     )
+    @ToString.Exclude
     private Set<Lesson> lessons = new HashSet<>();
 
 }

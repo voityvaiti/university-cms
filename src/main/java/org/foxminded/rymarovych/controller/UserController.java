@@ -67,7 +67,7 @@ public class UserController {
         return "user/new";
     }
 
-    @PostMapping()
+    @PostMapping("/new")
     public String create(@ModelAttribute("user") User user, Model model) {
         LOGGER.debug("/users/ POST" + REQUEST_RECEIVING_LOG_MESSAGE);
 

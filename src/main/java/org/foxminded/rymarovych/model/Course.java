@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,12 +26,15 @@ public class Course {
     private String name;
 
     @OneToMany(mappedBy = "course")
+    @ToString.Exclude
     private List<Lesson> lessons = new ArrayList<>();
 
     @ManyToMany(mappedBy = "courses")
+    @ToString.Exclude
     private Set<Group> groups = new HashSet<>();
 
     @ManyToMany(mappedBy = "courses")
+    @ToString.Exclude
     private Set<Teacher> teachers = new HashSet<>();
 
 }
