@@ -1,17 +1,16 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "lessons")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Lesson {
@@ -28,21 +27,41 @@ public class Lesson {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    @ToString.Exclude
     private Course course;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
-    @ToString.Exclude
     private Teacher teacher;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
-    @ToString.Exclude
     private ScheduleForDay scheduleForDay;
 
     @ManyToMany(mappedBy = "lessons")
-    @ToString.Exclude
     private Set<Group> groups = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lesson lesson = (Lesson) o;
+        return number == lesson.number && Objects.equals(id, lesson.id) && Objects.equals(place, lesson.place) && Objects.equals(course, lesson.course) && Objects.equals(teacher, lesson.teacher) && Objects.equals(scheduleForDay, lesson.scheduleForDay);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, place, course, teacher, scheduleForDay);
+    }
+
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "id=" + id +
+                ", number=" + number +
+                ", place='" + place + '\'' +
+                ", course=" + course +
+                ", teacher=" + teacher +
+                ", scheduleForDay=" + scheduleForDay +
+                '}';
+    }
 }

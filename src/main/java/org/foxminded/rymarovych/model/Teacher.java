@@ -1,22 +1,16 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "teachers")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Teacher extends Person {
 
     @Column(name = "degree")
@@ -43,6 +37,20 @@ public class Teacher extends Person {
         this.degree = degree;
         this.lessons = lessons;
         this.courses = courses;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Teacher teacher = (Teacher) o;
+        return Objects.equals(degree, teacher.degree);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), degree);
     }
 
     @Override

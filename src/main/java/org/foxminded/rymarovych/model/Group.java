@@ -1,19 +1,14 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "groups")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Group {
@@ -32,7 +27,6 @@ public class Group {
     private int year;
 
     @OneToMany(mappedBy = "group")
-    @ToString.Exclude
     private List<Student> students = new ArrayList<>();
 
     @ManyToMany(cascade = {
@@ -44,7 +38,6 @@ public class Group {
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id")}
     )
-    @ToString.Exclude
     private Set<Course> courses = new HashSet<>();
 
     @ManyToMany(cascade = {
@@ -56,7 +49,29 @@ public class Group {
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "lesson_id")}
     )
-    @ToString.Exclude
     private Set<Lesson> lessons = new HashSet<>();
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return year == group.year && Objects.equals(id, group.id) && Objects.equals(name, group.name) && Objects.equals(speciality, group.speciality);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, speciality, year);
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", speciality='" + speciality + '\'' +
+                ", year=" + year +
+                '}';
+    }
 }

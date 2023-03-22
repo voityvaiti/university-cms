@@ -2,18 +2,18 @@ package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+
 
 @Entity
 @Table(name = "courses")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
@@ -26,15 +26,33 @@ public class Course {
     private String name;
 
     @OneToMany(mappedBy = "course")
-    @ToString.Exclude
     private List<Lesson> lessons = new ArrayList<>();
 
     @ManyToMany(mappedBy = "courses")
-    @ToString.Exclude
     private Set<Group> groups = new HashSet<>();
 
     @ManyToMany(mappedBy = "courses")
-    @ToString.Exclude
     private Set<Teacher> teachers = new HashSet<>();
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(id, course.id) && Objects.equals(name, course.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
