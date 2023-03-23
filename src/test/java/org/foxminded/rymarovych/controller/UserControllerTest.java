@@ -37,7 +37,7 @@ class UserControllerTest {
 
         when(userService.findByUsername(createdUser.getUsername())).thenReturn(Optional.empty());
 
-        mvc.perform(post("/users")
+        mvc.perform(post("/users/new")
                 .flashAttr("user", createdUser));
 
         verify(userService).findByUsername(createdUser.getUsername());
@@ -50,7 +50,7 @@ class UserControllerTest {
 
         when(userService.findByUsername(createdUser.getUsername())).thenReturn(Optional.of(new User()));
 
-        mvc.perform(post("/users")
+        mvc.perform(post("/users/new")
                 .flashAttr("user", createdUser))
                 .andExpect(model().attributeExists("errorMessage"));
 
@@ -75,14 +75,15 @@ class UserControllerTest {
 
     @Test
     void editIfUserIsAbsent() throws Exception {
+        Long id = 5L;
 
         when(userService.findById(any())).thenReturn(Optional.empty());
 
-        mvc.perform(get("/users/edit/10"))
+        mvc.perform(get("/users/edit/"+ id))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("errorMessage"));
 
-        verify(userService).findById(any());
+        verify(userService).findById(id);
     }
 
     @Test

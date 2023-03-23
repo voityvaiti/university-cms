@@ -3,6 +3,7 @@ package org.foxminded.rymarovych.service.impl;
 import org.foxminded.rymarovych.dao.UserRepository;
 import org.foxminded.rymarovych.model.Role;
 import org.foxminded.rymarovych.model.User;
+import org.foxminded.rymarovych.service.abstractions.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,7 @@ class UserServiceImplTest {
     UserRepository userRepository;
 
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Test
     void add() {

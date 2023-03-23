@@ -9,11 +9,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,5 +48,32 @@ class CourseControllerTest {
                 .andExpect(model().attribute("courses", expected));
 
         verify(courseService).getAllCoursesList();
+    }
+
+    @Test
+    void editIfCourseIsPresent() throws Exception {
+        Course course = new Course(4L, "coursename", null, null, null);
+
+        when(courseService.findById(course.getId())).thenReturn(Optional.of(course));
+
+        mvc.perform(get("/courses/edit/" + course.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("course"))
+                .andExpect(model().attribute("course", course));
+
+        verify(courseService).findById(course.getId());
+    }
+
+    @Test
+    void editIfCourseIsAbsent() throws Exception {
+        Long id = 10L;
+
+        when(courseService.findById(any())).thenReturn(Optional.empty());
+
+        mvc.perform(get("/courses/edit/" + id))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("errorMessage"));
+
+        verify(courseService).findById(id);
     }
 }
