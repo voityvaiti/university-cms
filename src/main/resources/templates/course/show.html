@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Course</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div th:if="${optionalCourse.isPresent()}" class="w-100 d-flex justify-content-center">
+    <div th:with="course=${optionalCourse.get()}" class="w-25">
+        <h1 class="display-4" th:text="${'Course ID: ' + course.getId()}"></h1>
+        <p th:text="${'Name: ' + course.getName()}"></p>
+
+        <div class="row mb-4">
+            <div th:with="groups = ${course.getGroups()}" class="col">
+                <p>Groups:</p>
+                <ul th:each="group: ${groups}" class="list-group">
+                    <li th:text="${group.getName()}" class="list-group-item"></li>
+                </ul>
+            </div>
+
+            <div th:with="teachers = ${course.getTeachers()}" class="col">
+                <p>Teachers:</p>
+                <ul th:each="teacher: ${teachers}" class="list-group">
+                    <li th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}" class="list-group-item"></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center" th:method="GET" th:action="@{/courses/edit/{id}(id=${course.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Edit"/>
+            </form>
+
+            <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST" th:action="@{/courses/delete/{id}(id=${course.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Delete"/>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<div th:unless="${optionalCourse.isPresent()}">
+    <h1 class="display-2">Course not found</h1>
+</div>
+
+</body>
+</html>

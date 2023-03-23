@@ -3,36 +3,36 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <head>
-  <meta charset="UTF-8">
-  <title>Users</title>
-  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-  <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
 </head>
 
 <body class="d-flex justify-content-center">
 
 <div class="w-75 mb-4">
 
-  <h1 class="text-center display-2 mb-4 mt-3">Users list:</h1>
+    <h1 class="text-center display-2 mb-4 mt-3">Users list:</h1>
 
-  <table class="table">
+    <table class="table">
 
-    <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Username</th>
-      <th scope="col">Roles</th>
-    </thead>
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Roles</th>
+        </thead>
 
-    <tr th:each="user: ${users}">
-      <th scope="row" th:text="${user.getId()}"></th>
-      <th scope="row">
-        <a class="btn" th:href="@{/users/show/{id}(id=${user.getId()})}" th:text="${user.getUsername()}"></a>
-      </th>
-      <th scope="row" th:text="${user.getRoles()}"></th>
-    </tr>
+        <tr th:each="user: ${users}">
+            <th scope="row" th:text="${user.getId()}"></th>
+            <th scope="row">
+                <a class="btn" th:href="@{/users/show/{id}(id=${user.getId()})}" th:text="${user.getUsername()}"></a>
+            </th>
+            <th scope="row" th:text="${user.getRoles()}"></th>
+        </tr>
 
-  </table>
+    </table>
 
 </div>
 

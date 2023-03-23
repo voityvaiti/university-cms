@@ -37,13 +37,16 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/menu").authenticated()
-                .requestMatchers("/courses/*").authenticated()
-                .requestMatchers("/teachers/*").authenticated()
-                .requestMatchers("/students/*").authenticated()
-                .requestMatchers("/groups/*").authenticated()
+                .requestMatchers("/menu/**").authenticated()
+                .requestMatchers("/courses/new/**").hasAnyAuthority("ADMIN", "STUFF")
+                .requestMatchers("/courses/edit/**").hasAnyAuthority("ADMIN", "STUFF")
+                .requestMatchers("/courses/delete/**").hasAnyAuthority("ADMIN")
+                .requestMatchers("/courses/**").authenticated()
+                .requestMatchers("/teachers/**").authenticated()
+                .requestMatchers("/students/**").authenticated()
+                .requestMatchers("/groups/**").authenticated()
                 .requestMatchers("/users/current").authenticated()
-                .requestMatchers("/users/*").hasAuthority("ADMIN")
+                .requestMatchers("/users/**").hasAuthority("ADMIN")
                 .anyRequest().permitAll()
         ).formLogin().and().build();
     }
