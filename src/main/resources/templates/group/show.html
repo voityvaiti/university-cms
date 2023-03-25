@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Group</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+  <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div th:if="${optionalGroup.isPresent()}" class="w-100 d-flex justify-content-center">
+  <div th:with="group=${optionalGroup.get()}" class="w-25">
+    <h1 class="display-4" th:text="${'Group ID: ' + group.getId()}"></h1>
+    <p th:text="${'Name: ' + group.getName()}"></p>
+    <p th:text="${'Speciality: ' + group.getSpeciality()}"></p>
+    <p th:text="${'Year: ' + group.getYear()}"></p>
+
+    <div class="row mb-4">
+      <div th:with="students = ${group.getStudents()}" class="col">
+        <p>Students:</p>
+        <ul th:each="student: ${students}" class="list-group">
+          <li th:text="${student.getFirstName() + ' ' + student.getLastName()}" class="list-group-item"></li>
+        </ul>
+      </div>
+
+      <div th:with="courses = ${group.getCourses()}" class="col">
+        <p>Courses:</p>
+        <ul th:each="course: ${courses}" class="list-group">
+          <li th:text="${course.getName()}" class="list-group-item"></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+
+      <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center" th:method="GET" th:action="@{/groups/edit/{id}(id=${group.getId()})}">
+        <input type="submit" class="btn btn-primary" value="Edit"/>
+      </form>
+
+      <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST" th:action="@{/groups/delete/{id}(id=${group.getId()})}">
+        <input type="submit" class="btn btn-primary" value="Delete"/>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div th:unless="${optionalGroup.isPresent()}">
+  <h1 class="display-2">Course not found</h1>
+</div>
+
+</body>
+</html>

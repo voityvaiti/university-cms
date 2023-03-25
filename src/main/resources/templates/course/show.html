@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mb-4">
 
             <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center" th:method="GET" th:action="@{/courses/edit/{id}(id=${course.getId()})}">
                 <input type="submit" class="btn btn-primary" value="Edit"/>

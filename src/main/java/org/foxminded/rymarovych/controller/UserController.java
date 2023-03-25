@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public String getList(Model model) {
+    public String all(Model model) {
         LOGGER.debug("/users/all GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         model.addAttribute("users", userService.getAllUsersList());
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/show/{id}")
-    public String showUser(@PathVariable("id") Long id, Model model) {
+    public String show(@PathVariable("id") Long id, Model model) {
         LOGGER.debug("/users/show/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         model.addAttribute("optionalUser", userService.findById(id));

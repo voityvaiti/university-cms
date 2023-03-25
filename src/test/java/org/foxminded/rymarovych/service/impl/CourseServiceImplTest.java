@@ -13,9 +13,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = CourseServiceImpl.class)
 class CourseServiceImplTest {
@@ -38,6 +36,20 @@ class CourseServiceImplTest {
         assertEquals(updatedCourse, courseService.update(id, updatedCourse));
 
         verify(courseRepository).save(updatedCourse);
+
+    }
+
+    @Test
+    void notUpdateIfCourseNotFound() {
+        Long id = 4L;
+
+        Course updatedCourse = new Course(id, "Biology", null, null, null);
+
+        when(courseRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertNotEquals(updatedCourse, courseService.update(id, updatedCourse));
+
+        verify(courseRepository, never()).save(any());
 
     }
 

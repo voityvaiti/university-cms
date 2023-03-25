@@ -37,7 +37,7 @@ public class CourseController {
 
 
     @GetMapping("/all")
-    public String getList(Model model) {
+    public String all(Model model) {
         LOGGER.debug("/courses/all GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         model.addAttribute("courses", courseService.getAllCoursesList());
@@ -45,7 +45,7 @@ public class CourseController {
     }
 
     @GetMapping("/show/{id}")
-    public String showCourse(@PathVariable("id") Long id, Model model) {
+    public String show(@PathVariable("id") Long id, Model model) {
         LOGGER.debug("/courses/show/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         model.addAttribute("optionalCourse", courseService.findById(id));
@@ -65,7 +65,7 @@ public class CourseController {
         LOGGER.debug("/courses/ POST" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         courseService.add(course);
-        LOGGER.debug("Course added. Name: {}", course.getName());
+        LOGGER.debug("Course added: {}", course);
 
         return "redirect:/courses/";
     }
@@ -79,9 +79,9 @@ public class CourseController {
         if(optionalCourse.isPresent()) {
             Course course = optionalCourse.get();
 
-            LOGGER.debug("Found course to edit. ID: {}, name: {}", course.getId(), course.getName());
+            LOGGER.debug("Found Course to edit: {}", course);
 
-            model.addAttribute("course", optionalCourse.get());
+            model.addAttribute("course", course);
 
         } else {
             LOGGER.warn("Not found Course to edit by ID: {}", id);
