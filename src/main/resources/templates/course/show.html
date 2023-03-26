@@ -12,32 +12,60 @@
 
 <div th:if="${optionalCourse.isPresent()}" class="w-100 d-flex justify-content-center">
     <div th:with="course=${optionalCourse.get()}" class="w-25">
+
         <h1 class="display-4" th:text="${'Course ID: ' + course.getId()}"></h1>
+
         <p th:text="${'Name: ' + course.getName()}"></p>
 
         <div class="row mb-4">
-            <div th:with="groups = ${course.getGroups()}" class="col">
+
+            <div class="col">
                 <p>Groups:</p>
-                <ul th:each="group: ${groups}" class="list-group">
-                    <li th:text="${group.getName()}" class="list-group-item"></li>
-                </ul>
+
+                <div th:each="group: ${course.getGroups()}" class="list-group">
+                    <div class="list-group-item d-flex justify-content-between">
+
+                        <span th:text="${group.getName()}"></span>
+
+                        <form th:action="@{/courses/show/{id}(id=${course.getId()})}" th:object="${idPair}" method="POST">
+                            <input type="hidden" th:field="*{entityId}" th:value="${course.id}">
+                            <input type="hidden" th:field="*{relatedEntityId}" th:value="${group.id}">
+                            <input type="submit">
+                        </form>
+
+                    </div>
+                </div>
+
             </div>
 
-            <div th:with="teachers = ${course.getTeachers()}" class="col">
+            <div class="col">
                 <p>Teachers:</p>
-                <ul th:each="teacher: ${teachers}" class="list-group">
-                    <li th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}" class="list-group-item"></li>
-                </ul>
+
+                <div th:each="teacher: ${course.getTeachers()}" class="list-group">
+                    <div class="list-group-item d-flex justify-content-between">
+
+                        <span th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}"></span>
+
+                        <a sec:authorize="hasAuthority('ADMIN')"
+                           th:href="@{/courses/teacher-relation/unlink/{entityId}/{relationId}(entityId = ${course.getId()}, relationId = ${teacher.getId()})}"
+                           class="btn btn-close"></a>
+
+                    </div>
+                </div>
+
             </div>
+
         </div>
 
         <div class="row mb-4">
 
-            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center" th:method="GET" th:action="@{/courses/edit/{id}(id=${course.getId()})}">
+            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+                  th:method="GET" th:action="@{/courses/edit/{id}(id=${course.getId()})}">
                 <input type="submit" class="btn btn-primary" value="Edit"/>
             </form>
 
-            <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST" th:action="@{/courses/delete/{id}(id=${course.getId()})}">
+            <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST"
+                  th:action="@{/courses/delete/{id}(id=${course.getId()})}">
                 <input type="submit" class="btn btn-primary" value="Delete"/>
             </form>
 

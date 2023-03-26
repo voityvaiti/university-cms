@@ -16,4 +16,8 @@ public interface CourseService {
 
     void delete(Long id);
 
+    void unlinkGroup(Long courseId, Long groupId);
+
+    void unlinkTeacher(Long courseId, Long groupId);
+
 }

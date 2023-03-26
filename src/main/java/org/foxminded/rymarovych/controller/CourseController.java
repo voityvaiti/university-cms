@@ -1,6 +1,7 @@
 package org.foxminded.rymarovych.controller;
 
 import org.foxminded.rymarovych.model.Course;
+import org.foxminded.rymarovych.model.dto.EntitiesIdPairDto;
 import org.foxminded.rymarovych.service.abstractions.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,6 @@ public class CourseController {
     }
 
 
-
     @GetMapping("/all")
     public String all(Model model) {
         LOGGER.debug("/courses/all GET" + REQUEST_RECEIVING_LOG_MESSAGE);
@@ -49,6 +49,7 @@ public class CourseController {
         LOGGER.debug("/courses/show/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         model.addAttribute("optionalCourse", courseService.findById(id));
+        model.addAttribute("idPair", new EntitiesIdPairDto());
         return "course/show";
     }
 
@@ -62,7 +63,7 @@ public class CourseController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute("course") Course course) {
-        LOGGER.debug("/courses/ POST" + REQUEST_RECEIVING_LOG_MESSAGE);
+        LOGGER.debug("/courses/new POST" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         courseService.add(course);
         LOGGER.debug("Course added: {}", course);
@@ -76,7 +77,7 @@ public class CourseController {
 
         Optional<Course> optionalCourse = courseService.findById(id);
 
-        if(optionalCourse.isPresent()) {
+        if (optionalCourse.isPresent()) {
             Course course = optionalCourse.get();
 
             LOGGER.debug("Found Course to edit: {}", course);
@@ -97,8 +98,8 @@ public class CourseController {
     public String update(@ModelAttribute("course") Course course, @PathVariable("id") Long id) {
         LOGGER.debug("/courses/edit/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
-            courseService.update(id, course);
-            return "redirect:/courses/";
+        courseService.update(id, course);
+        return "redirect:/courses/";
 
     }
 
@@ -108,6 +109,37 @@ public class CourseController {
 
         courseService.delete(id);
         return "redirect:/courses/";
+    }
+
+    @PostMapping("/group-relation")
+    public String editGroupRelation(@ModelAttribute("idPair") EntitiesIdPairDto entitiesIdPairDto) {
+
+        System.out.println(entitiesIdPairDto.getEntityId() + " " + entitiesIdPairDto.getRelatedEntityId());
+
+        courseService.unlinkGroup(entitiesIdPairDto.getEntityId(), entitiesIdPairDto.getRelatedEntityId());
+
+
+        return "redirect:/courses/show/" + entitiesIdPairDto.getEntityId();
+    }
+
+    @GetMapping("/teacher-relation/{action}/{courseId}/{teacherId}")
+    public String editTeacherRelation(@PathVariable("action") String action, @PathVariable("courseId") Long courseId, @PathVariable("teacherId") Long teacherId, Model model) {
+
+        if (action.equals("link")) {
+
+        } else if (action.equals("unlink")) {
+            courseService.unlinkTeacher(courseId, teacherId);
+        }
+
+        return "redirect:/courses/show/" + courseId;
+    }
+
+
+    @PostMapping("/teacher-relation")
+    public String teacherRelation(@ModelAttribute("idPair") EntitiesIdPairDto entitiesIdPairDto) {
+        System.out.println(entitiesIdPairDto);
+
+        return "redirect:/courses/show/" + entitiesIdPairDto.getEntityId();
     }
 
 }

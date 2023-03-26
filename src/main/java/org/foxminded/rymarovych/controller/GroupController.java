@@ -59,7 +59,7 @@ public class GroupController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute("group") Group group) {
-        LOGGER.debug("/groups/ POST" + REQUEST_RECEIVING_LOG_MESSAGE);
+        LOGGER.debug("/groups/new POST" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         groupService.add(group);
         LOGGER.debug("Group added: {}", group);

@@ -35,6 +35,26 @@ public class Course {
     private Set<Teacher> teachers = new HashSet<>();
 
 
+    public void addGroup(Group group) {
+        this.groups.add(group);
+        group.getCourses().add(this);
+    }
+
+    public void removeGroup(Group group) {
+        this.groups.remove(group);
+        group.getCourses().remove(this);
+    }
+
+    public void addTeacher(Teacher teacher) {
+        this.teachers.add(teacher);
+        teacher.getCourses().add(this);
+    }
+
+    public void removeTeacher(Teacher teacher) {
+        this.teachers.remove(teacher);
+        teacher.getCourses().remove(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
