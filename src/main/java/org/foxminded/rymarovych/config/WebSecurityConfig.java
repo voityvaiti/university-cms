@@ -38,6 +38,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/menu/**").authenticated()
+                .requestMatchers("/courses/group-relation/**").hasAnyAuthority("ADMIN", "STUFF")
+                .requestMatchers("/courses/teacher-relation/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/courses/new/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/courses/edit/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/courses/delete/**").hasAnyAuthority("ADMIN")

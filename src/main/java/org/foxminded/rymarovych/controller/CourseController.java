@@ -1,7 +1,6 @@
 package org.foxminded.rymarovych.controller;
 
 import org.foxminded.rymarovych.model.Course;
-import org.foxminded.rymarovych.model.dto.EntitiesIdPairDto;
 import org.foxminded.rymarovych.service.abstractions.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,8 @@ public class CourseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseController.class);
 
     static final String REQUEST_RECEIVING_LOG_MESSAGE = " HTTP request received";
+
+    static final String REDIRECT_TO_COURSES_MENU = "redirect:/courses/";
 
     private final CourseService courseService;
 
@@ -49,7 +50,7 @@ public class CourseController {
         LOGGER.debug("/courses/show/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         model.addAttribute("optionalCourse", courseService.findById(id));
-        model.addAttribute("idPair", new EntitiesIdPairDto());
+
         return "course/show";
     }
 
@@ -68,7 +69,7 @@ public class CourseController {
         courseService.add(course);
         LOGGER.debug("Course added: {}", course);
 
-        return "redirect:/courses/";
+        return REDIRECT_TO_COURSES_MENU;
     }
 
     @GetMapping("/edit/{id}")
@@ -99,7 +100,7 @@ public class CourseController {
         LOGGER.debug("/courses/edit/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         courseService.update(id, course);
-        return "redirect:/courses/";
+        return REDIRECT_TO_COURSES_MENU;
 
     }
 
@@ -108,38 +109,50 @@ public class CourseController {
         LOGGER.info("/courses/delete/{}" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         courseService.delete(id);
-        return "redirect:/courses/";
+        return REDIRECT_TO_COURSES_MENU;
     }
 
-    @PostMapping("/group-relation")
-    public String editGroupRelation(@ModelAttribute("idPair") EntitiesIdPairDto entitiesIdPairDto) {
+    @GetMapping("/group-relation/add/{id}")
+    public String addGroupRelation(@PathVariable("id") Long id, Model model) {
 
-        System.out.println(entitiesIdPairDto.getEntityId() + " " + entitiesIdPairDto.getRelatedEntityId());
+        model.addAttribute("courseId", id);
+        model.addAttribute("groups", courseService.getUnlinkedGroups(id));
 
-        courseService.unlinkGroup(entitiesIdPairDto.getEntityId(), entitiesIdPairDto.getRelatedEntityId());
-
-
-        return "redirect:/courses/show/" + entitiesIdPairDto.getEntityId();
+        return "/course/add-group";
     }
 
-    @GetMapping("/teacher-relation/{action}/{courseId}/{teacherId}")
-    public String editTeacherRelation(@PathVariable("action") String action, @PathVariable("courseId") Long courseId, @PathVariable("teacherId") Long teacherId, Model model) {
+    @PostMapping("/group-relation/{action}")
+    public String editGroupRelation(@PathVariable("action") String action, @RequestParam("courseId") Long courseId, @RequestParam("groupId") Long groupId) {
+
+        if(action.equals("link")) {
+            courseService.linkGroup(courseId, groupId);
+
+        } else if (action.equals("unlink")) {
+            courseService.unlinkGroup(courseId, groupId);
+        }
+        return "redirect:/courses/show/" + courseId;
+    }
+
+    @GetMapping("/teacher-relation/add/{id}")
+    public String addTeacherRelation(@PathVariable("id") Long id, Model model) {
+
+        model.addAttribute("courseId", id);
+        model.addAttribute("teachers", courseService.getUnlinkedTeachers(id));
+
+        return "/course/add-teacher";
+    }
+
+    @PostMapping("/teacher-relation/{action}")
+    public String editTeacherRelation(@PathVariable("action") String action, @RequestParam("courseId") Long courseId, @RequestParam("teacherId") Long teacherId) {
 
         if (action.equals("link")) {
+            courseService.linkTeacher(courseId, teacherId);
 
         } else if (action.equals("unlink")) {
             courseService.unlinkTeacher(courseId, teacherId);
         }
 
         return "redirect:/courses/show/" + courseId;
-    }
-
-
-    @PostMapping("/teacher-relation")
-    public String teacherRelation(@ModelAttribute("idPair") EntitiesIdPairDto entitiesIdPairDto) {
-        System.out.println(entitiesIdPairDto);
-
-        return "redirect:/courses/show/" + entitiesIdPairDto.getEntityId();
     }
 
 }

@@ -25,12 +25,13 @@
                 <div th:each="group: ${course.getGroups()}" class="list-group">
                     <div class="list-group-item d-flex justify-content-between">
 
-                        <span th:text="${group.getName()}"></span>
+                        <a th:href="@{/groups/show/{id}(id=${group.getId()})}" th:text="${group.getName()}" class="btn py-0"></a>
 
-                        <form th:action="@{/courses/show/{id}(id=${course.getId()})}" th:object="${idPair}" method="POST">
-                            <input type="hidden" th:field="*{entityId}" th:value="${course.id}">
-                            <input type="hidden" th:field="*{relatedEntityId}" th:value="${group.id}">
-                            <input type="submit">
+                        <form th:action="@{/courses/group-relation/unlink}" sec:authorize="hasAuthority('ADMIN')"
+                              method="POST">
+                            <input type="hidden" name="courseId" th:value="${course.id}">
+                            <input type="hidden" name="groupId" th:value="${group.id}">
+                            <input class="btn btn-close" type="submit" value="">
                         </form>
 
                     </div>
@@ -44,11 +45,14 @@
                 <div th:each="teacher: ${course.getTeachers()}" class="list-group">
                     <div class="list-group-item d-flex justify-content-between">
 
-                        <span th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}"></span>
+                        <a th:href="@{/teachers/show/{id}(id=${teacher.getId()})}" th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}" class="btn py-0"></a>
 
-                        <a sec:authorize="hasAuthority('ADMIN')"
-                           th:href="@{/courses/teacher-relation/unlink/{entityId}/{relationId}(entityId = ${course.getId()}, relationId = ${teacher.getId()})}"
-                           class="btn btn-close"></a>
+                        <form th:action="@{/courses/teacher-relation/unlink}" sec:authorize="hasAuthority('ADMIN')"
+                              method="POST">
+                            <input type="hidden" name="courseId" th:value="${course.id}">
+                            <input type="hidden" name="teacherId" th:value="${teacher.id}">
+                            <input class="btn btn-close" type="submit" value="">
+                        </form>
 
                     </div>
                 </div>
@@ -57,7 +61,7 @@
 
         </div>
 
-        <div class="row mb-4">
+        <div class="row mb-2">
 
             <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
                   th:method="GET" th:action="@{/courses/edit/{id}(id=${course.getId()})}">
@@ -67,6 +71,21 @@
             <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST"
                   th:action="@{/courses/delete/{id}(id=${course.getId()})}">
                 <input type="submit" class="btn btn-primary" value="Delete"/>
+            </form>
+
+        </div>
+
+        <div class="row mb-4">
+
+            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+                  th:method="GET" th:action="@{/courses/group-relation/add/{id}(id=${course.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Link group"/>
+            </form>
+
+            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+                  th:method="GET"
+                  th:action="@{/courses/teacher-relation/add/{id}(id=${course.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Link teacher"/>
             </form>
 
         </div>

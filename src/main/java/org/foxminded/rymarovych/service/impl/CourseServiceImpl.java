@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,41 @@ public class CourseServiceImpl implements CourseService {
 
         return courseRepository.findById(id);
     }
+
+    @Override
+    public List<Group> getUnlinkedGroups(Long courseId) {
+        Optional<Course> optionalCourse =  courseRepository.findById(courseId);
+
+        if(optionalCourse.isPresent()) {
+            Course course = optionalCourse.get();
+            List<Group> allGroups = groupRepository.findAll();
+
+            allGroups.removeAll(course.getGroups());
+
+            return allGroups;
+
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<Teacher> getUnlinkedTeachers(Long courseId) {
+        Optional<Course> optionalCourse =  courseRepository.findById(courseId);
+
+        if(optionalCourse.isPresent()) {
+            Course course = optionalCourse.get();
+            List<Teacher> allTeachers = teacherRepository.findAll();
+
+            allTeachers.removeAll(course.getTeachers());
+
+            return allTeachers;
+
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 
     @Override
     public Course add(Course course) {
@@ -87,12 +123,34 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
+    public void linkGroup(Long courseId, Long groupId) {
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+
+        if(optionalCourse.isPresent() && optionalGroup.isPresent()) {
+            optionalCourse.get().addGroup(optionalGroup.get());
+        }
+    }
+
+    @Override
+    @Transactional
     public void unlinkGroup(Long courseId, Long groupId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
 
         if(optionalCourse.isPresent() && optionalGroup.isPresent()) {
             optionalCourse.get().removeGroup(optionalGroup.get());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void linkTeacher(Long courseId, Long teacherId) {
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
+        Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
+
+        if(optionalCourse.isPresent() && optionalTeacher.isPresent()) {
+            optionalCourse.get().addTeacher(optionalTeacher.get());
         }
     }
 

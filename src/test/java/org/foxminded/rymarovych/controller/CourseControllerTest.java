@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CourseController.class)
@@ -75,5 +76,61 @@ class CourseControllerTest {
                 .andExpect(model().attributeExists("errorMessage"));
 
         verify(courseService).findById(id);
+    }
+
+    @Test
+    void linkGroupIfActionIsLink() throws Exception {
+        String action = "link";
+
+        String courseId = "4";
+        String groupId = "2";
+
+        mvc.perform(post("/courses/group-relation/" + action)
+                        .param("courseId", courseId)
+                        .param("groupId", groupId));
+
+        verify(courseService).linkGroup(Long.parseLong(courseId), Long.parseLong(groupId));
+    }
+
+    @Test
+    void unlinkGroupIfActionIsUnlink() throws Exception {
+        String action = "unlink";
+
+        String courseId = "4";
+        String groupId = "2";
+
+        mvc.perform(post("/courses/group-relation/" + action)
+                .param("courseId", courseId)
+                .param("groupId", groupId));
+
+        verify(courseService).unlinkGroup(Long.parseLong(courseId), Long.parseLong(groupId));
+    }
+
+    @Test
+    void linkTeacherIfActionIsLink() throws Exception {
+        String action = "link";
+
+        String courseId = "2";
+        String teacherId = "7";
+
+        mvc.perform(post("/courses/teacher-relation/" + action)
+                .param("courseId", courseId)
+                .param("teacherId", teacherId));
+
+        verify(courseService).linkTeacher(Long.parseLong(courseId), Long.parseLong(teacherId));
+    }
+
+    @Test
+    void unlinkTeacherIfActionIsUnlink() throws Exception {
+        String action = "unlink";
+
+        String courseId = "2";
+        String teacherId = "7";
+
+        mvc.perform(post("/courses/teacher-relation/" + action)
+                .param("courseId", courseId)
+                .param("teacherId", teacherId));
+
+        verify(courseService).unlinkTeacher(Long.parseLong(courseId), Long.parseLong(teacherId));
     }
 }
