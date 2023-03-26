@@ -3,53 +3,92 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8">
-  <title>Group</title>
-  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-  <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+    <meta charset="UTF-8">
+    <title>Group</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
 </head>
 <body>
 
 <div th:if="${optionalGroup.isPresent()}" class="w-100 d-flex justify-content-center">
-  <div th:with="group=${optionalGroup.get()}" class="w-25">
-    <h1 class="display-4" th:text="${'Group ID: ' + group.getId()}"></h1>
-    <p th:text="${'Name: ' + group.getName()}"></p>
-    <p th:text="${'Speciality: ' + group.getSpeciality()}"></p>
-    <p th:text="${'Year: ' + group.getYear()}"></p>
+    <div th:with="group=${optionalGroup.get()}" class="w-25">
 
-    <div class="row mb-4">
-      <div th:with="students = ${group.getStudents()}" class="col">
-        <p>Students:</p>
-        <ul th:each="student: ${students}" class="list-group">
-          <li th:text="${student.getFirstName() + ' ' + student.getLastName()}" class="list-group-item"></li>
-        </ul>
-      </div>
+        <h1 class="display-4" th:text="${'Group ID: ' + group.getId()}"></h1>
 
-      <div th:with="courses = ${group.getCourses()}" class="col">
-        <p>Courses:</p>
-        <ul th:each="course: ${courses}" class="list-group">
-          <li th:text="${course.getName()}" class="list-group-item"></li>
-        </ul>
-      </div>
+        <p th:text="${'Name: ' + group.getName()}"></p>
+
+        <p th:text="${'Speciality: ' + group.getSpeciality()}"></p>
+
+        <p th:text="${'Year: ' + group.getYear()}"></p>
+
+        <div class="row mb-4">
+
+            <div class="col">
+                <p>Students:</p>
+
+                <div th:each="student: ${group.getStudents()}" class="list-group">
+                    <div class="list-group-item d-flex justify-content-between">
+
+                        <a th:href="@{/students/show/{id}(id=${student.getId()})}"
+                           th:text="${student.getFirstName() + ' ' + student.getLastName()}" class="btn py-0 text-start"></a>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col">
+
+                <p>Courses:</p>
+                <div th:each="course: ${group.getCourses()}" class="list-group">
+
+                    <div class="list-group-item d-flex justify-content-between">
+
+                        <a th:href="@{/courses/show/{id}(id=${course.getId()})}" th:text="${course.getName()}"
+                           class="btn py-0 text-start"></a>
+
+                        <form th:action="@{/groups/course-relation/unlink}" sec:authorize="hasAuthority('ADMIN')"
+                              method="POST">
+                            <input type="hidden" name="groupId" th:value="${group.id}">
+                            <input type="hidden" name="courseId" th:value="${course.id}">
+                            <input class="btn btn-close" type="submit" value="">
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row mb-4">
+
+            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+                  th:method="GET" th:action="@{/groups/edit/{id}(id=${group.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Edit"/>
+            </form>
+
+            <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST"
+                  th:action="@{/groups/delete/{id}(id=${group.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Delete"/>
+            </form>
+
+        </div>
+
+        <div class="row mb-4">
+
+            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+                  th:method="GET" th:action="@{/groups/course-relation/add/{id}(id=${group.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Link course"/>
+            </form>
+
+        </div>
+
     </div>
-
-    <div class="row mb-4">
-
-      <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center" th:method="GET" th:action="@{/groups/edit/{id}(id=${group.getId()})}">
-        <input type="submit" class="btn btn-primary" value="Edit"/>
-      </form>
-
-      <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST" th:action="@{/groups/delete/{id}(id=${group.getId()})}">
-        <input type="submit" class="btn btn-primary" value="Delete"/>
-      </form>
-
-    </div>
-
-  </div>
 </div>
 
 <div th:unless="${optionalGroup.isPresent()}">
-  <h1 class="display-2">Course not found</h1>
+    <h1 class="display-2">Course not found</h1>
 </div>
 
 </body>

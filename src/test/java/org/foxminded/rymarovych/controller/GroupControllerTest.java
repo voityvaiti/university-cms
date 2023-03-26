@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,5 +78,33 @@ class GroupControllerTest {
                 .andExpect(model().attributeExists("errorMessage"));
 
         verify(groupService).findById(id);
+    }
+
+    @Test
+    void linkCourseIfActionIsLink() throws Exception {
+        String action = "link";
+
+        String groupId = "7";
+        String courseId = "3";
+
+        mvc.perform(post("/groups/course-relation/" + action)
+                .param("groupId", groupId)
+                .param("courseId", courseId));
+
+        verify(groupService).linkCourse(Long.parseLong(groupId), Long.parseLong(courseId));
+    }
+
+    @Test
+    void unlinkCourseIfActionIsUnlink() throws Exception {
+        String action = "unlink";
+
+        String groupId = "7";
+        String courseId = "3";
+
+        mvc.perform(post("/groups/course-relation/" + action)
+                .param("groupId", groupId)
+                .param("courseId", courseId));
+
+        verify(groupService).unlinkCourse(Long.parseLong(groupId), Long.parseLong(courseId));
     }
 }

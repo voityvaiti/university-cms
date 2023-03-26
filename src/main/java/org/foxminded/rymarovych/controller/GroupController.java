@@ -106,5 +106,26 @@ public class GroupController {
         return "redirect:/groups/";
     }
 
+    @GetMapping("/course-relation/add/{id}")
+    public String addCourseRelation(@PathVariable("id") Long id, Model model) {
+
+        model.addAttribute("groupId", id);
+        model.addAttribute("courses", groupService.getUnlinkedCourses(id));
+
+        return "/group/add-course";
+    }
+
+    @PostMapping("/course-relation/{action}")
+    public String editGroupRelation(@PathVariable("action") String action, @RequestParam("groupId") Long groupId, @RequestParam("courseId") Long courseId) {
+
+        if(action.equals("link")) {
+            groupService.linkCourse(groupId, courseId);
+
+        } else if (action.equals("unlink")) {
+            groupService.unlinkCourse(groupId, courseId);
+        }
+        return "redirect:/groups/show/" + groupId;
+    }
+
 
 }
