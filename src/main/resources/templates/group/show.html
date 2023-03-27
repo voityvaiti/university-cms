@@ -30,7 +30,8 @@
                     <div class="list-group-item d-flex justify-content-between">
 
                         <a th:href="@{/students/show/{id}(id=${student.getId()})}"
-                           th:text="${student.getFirstName() + ' ' + student.getLastName()}" class="btn py-0 text-start"></a>
+                           th:text="${student.getFirstName() + ' ' + student.getLastName()}"
+                           class="btn py-0 text-start"></a>
 
                     </div>
                 </div>

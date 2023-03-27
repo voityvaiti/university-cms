@@ -49,13 +49,20 @@ public class GroupServiceImpl implements GroupService {
 
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
+
+            LOGGER.debug("Found Group to get unlinked Courses: {}", group);
+
             List<Course> allCourses = courseRepository.findAll();
 
             allCourses.removeAll(group.getCourses());
 
+            LOGGER.debug("Got list of unlinked Courses: {} to the Group: {}", allCourses, group);
+
             return allCourses;
 
         } else {
+            LOGGER.warn("Not found any Group by ID: {}. Returning an empty ArrayList.", groupId);
+
             return new ArrayList<>();
         }
     }
@@ -103,22 +110,40 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void linkCourse(Long groupId, Long courseId) {
+        LOGGER.debug("Received groupId: {} to link with courseId: {}", groupId, courseId);
+
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
-        if(optionalGroup.isPresent() && optionalCourse.isPresent()) {
-            optionalGroup.get().addCourse(optionalCourse.get());
+        if (optionalGroup.isPresent() && optionalCourse.isPresent()) {
+            Group group = optionalGroup.get();
+            Course course = optionalCourse.get();
+
+            LOGGER.debug("Found Group: {} to link with Course: {}. Linking.", group, course);
+
+            group.addCourse(course);
+        } else {
+            LOGGER.warn("Not found Group and/or Course to link. Group: {}, Course: {}", optionalGroup.isPresent(), optionalCourse.isPresent());
         }
     }
 
     @Override
     @Transactional
     public void unlinkCourse(Long groupId, Long courseId) {
+        LOGGER.debug("Received groupId: {} to unlink from courseId: {}", groupId, courseId);
+
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
-        if(optionalGroup.isPresent() && optionalCourse.isPresent()) {
-            optionalGroup.get().removeCourse(optionalCourse.get());
+        if (optionalGroup.isPresent() && optionalCourse.isPresent()) {
+            Group group = optionalGroup.get();
+            Course course = optionalCourse.get();
+
+            LOGGER.debug("Found Group: {} to unlink with Course: {}. Unlinking.", group, course);
+
+            group.removeCourse(course);
+        } else {
+            LOGGER.warn("Not found Group and/or Course to unlink. Group: {}, Course: {}", optionalGroup.isPresent(), optionalCourse.isPresent());
         }
     }
 

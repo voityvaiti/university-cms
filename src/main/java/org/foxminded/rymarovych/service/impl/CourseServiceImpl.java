@@ -49,34 +49,48 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Group> getUnlinkedGroups(Long courseId) {
-        Optional<Course> optionalCourse =  courseRepository.findById(courseId);
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
-        if(optionalCourse.isPresent()) {
+        if (optionalCourse.isPresent()) {
             Course course = optionalCourse.get();
+
+            LOGGER.debug("Found Course to get unlinked Groups: {}", course);
+
             List<Group> allGroups = groupRepository.findAll();
 
             allGroups.removeAll(course.getGroups());
 
+            LOGGER.debug("Got list of unlinked Groups: {} to the Course: {}", allGroups, course);
+
             return allGroups;
 
         } else {
+            LOGGER.warn("Not found any Course by ID: {}. Returning an empty ArrayList.", courseId);
+
             return new ArrayList<>();
         }
     }
 
     @Override
     public List<Teacher> getUnlinkedTeachers(Long courseId) {
-        Optional<Course> optionalCourse =  courseRepository.findById(courseId);
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
-        if(optionalCourse.isPresent()) {
+        if (optionalCourse.isPresent()) {
             Course course = optionalCourse.get();
+
+            LOGGER.debug("Found Course to get unlinked Teachers: {}", course);
+
             List<Teacher> allTeachers = teacherRepository.findAll();
 
             allTeachers.removeAll(course.getTeachers());
 
+            LOGGER.debug("Got list of unlinked Teachers: {} to the Course: {}", allTeachers, course);
+
             return allTeachers;
 
         } else {
+            LOGGER.warn("Not found any Course by ID: {}. Returning an empty ArrayList.", courseId);
+
             return new ArrayList<>();
         }
     }
@@ -124,44 +138,80 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void linkGroup(Long courseId, Long groupId) {
+        LOGGER.debug("Received courseId: {} to link with groupId: {}", courseId, groupId);
+
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
 
-        if(optionalCourse.isPresent() && optionalGroup.isPresent()) {
-            optionalCourse.get().addGroup(optionalGroup.get());
+        if (optionalCourse.isPresent() && optionalGroup.isPresent()) {
+            Course course = optionalCourse.get();
+            Group group = optionalGroup.get();
+
+            LOGGER.debug("Found Course: {} to link with Group: {}. Linking.", course, group);
+
+            course.addGroup(group);
+        } else {
+            LOGGER.warn("Not found Course and/or Group to link. Course: {}, Group: {}", optionalCourse.isPresent(), optionalGroup.isPresent());
         }
     }
 
     @Override
     @Transactional
     public void unlinkGroup(Long courseId, Long groupId) {
+        LOGGER.debug("Received courseId: {} to unlink from groupId: {}", courseId, groupId);
+
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
 
-        if(optionalCourse.isPresent() && optionalGroup.isPresent()) {
-            optionalCourse.get().removeGroup(optionalGroup.get());
+        if (optionalCourse.isPresent() && optionalGroup.isPresent()) {
+            Course course = optionalCourse.get();
+            Group group = optionalGroup.get();
+
+            LOGGER.debug("Found Course: {} to unlink from Group: {}. Unlinking.", course, group);
+
+            course.removeGroup(group);
+        } else {
+            LOGGER.warn("Not found Course and/or Group to unlink. Course: {}, Group: {}", optionalCourse.isPresent(), optionalGroup.isPresent());
         }
     }
 
     @Override
     @Transactional
     public void linkTeacher(Long courseId, Long teacherId) {
+        LOGGER.debug("Received courseId: {} to link with teacherId: {}", courseId, teacherId);
+
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
 
-        if(optionalCourse.isPresent() && optionalTeacher.isPresent()) {
-            optionalCourse.get().addTeacher(optionalTeacher.get());
+        if (optionalCourse.isPresent() && optionalTeacher.isPresent()) {
+            Course course = optionalCourse.get();
+            Teacher teacher = optionalTeacher.get();
+
+            LOGGER.debug("Found Course: {} to link with Teacher: {}. Linking.", course, teacher);
+
+            course.addTeacher(teacher);
+        } else {
+            LOGGER.warn("Not found Course and/or Teacher to link. Course: {}, Teacher: {}", optionalCourse.isPresent(), optionalTeacher.isPresent());
         }
     }
 
     @Override
     @Transactional
     public void unlinkTeacher(Long courseId, Long teacherId) {
+        LOGGER.debug("Received courseId: {} to unlink from teacherId: {}", courseId, teacherId);
+
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
 
-        if(optionalCourse.isPresent() && optionalTeacher.isPresent()) {
-            optionalCourse.get().removeTeacher(optionalTeacher.get());
+        if (optionalCourse.isPresent() && optionalTeacher.isPresent()) {
+            Course course = optionalCourse.get();
+            Teacher teacher = optionalTeacher.get();
+
+            LOGGER.debug("Found Course: {} to unlink from Teacher: {}. unlinking.", course, teacher);
+
+            course.removeTeacher(teacher);
+        } else {
+            LOGGER.warn("Not found Course and/or Teacher to unlink. Course: {}, Teacher: {}", optionalCourse.isPresent(), optionalTeacher.isPresent());
         }
     }
 

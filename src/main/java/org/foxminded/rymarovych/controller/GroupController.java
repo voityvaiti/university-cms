@@ -19,6 +19,14 @@ public class GroupController {
 
     static final String REQUEST_RECEIVING_LOG_MESSAGE = " HTTP request received";
 
+    static final String REDIRECT_TO_GROUPS_MENU = "redirect:/groups";
+
+    static final String REDIRECT_TO_GROUP_SHOW = "redirect:/groups/show/";
+
+    static final String ERROR_MESSAGE_ATTR = "errorMessage";
+
+    static final String GROUP_ATTR = "group";
+
     private final GroupService groupService;
 
     @Autowired
@@ -35,7 +43,7 @@ public class GroupController {
 
     @GetMapping("/all")
     public String all(Model model) {
-        LOGGER.debug("/groups/all GER HTTP request received");
+        LOGGER.debug("/groups/all GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         model.addAttribute("groups", groupService.getAllGroupsList());
         return "group/list";
@@ -53,18 +61,18 @@ public class GroupController {
     public String newGroup(Model model) {
         LOGGER.debug("/groups/new GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
-        model.addAttribute("group", new Group());
+        model.addAttribute(GROUP_ATTR, new Group());
         return "group/new";
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("group") Group group) {
+    public String create(@ModelAttribute(GROUP_ATTR) Group group) {
         LOGGER.debug("/groups/new POST" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         groupService.add(group);
         LOGGER.debug("Group added: {}", group);
 
-        return "redirect:/groups/";
+        return REDIRECT_TO_GROUPS_MENU;
     }
 
     @GetMapping("/edit/{id}")
@@ -78,53 +86,62 @@ public class GroupController {
 
             LOGGER.debug("Found Group to edit: {}", group);
 
-            model.addAttribute("group", group);
+            model.addAttribute(GROUP_ATTR, group);
 
         } else {
             LOGGER.warn("Not found Group to edit by ID: {}", id);
 
-            model.addAttribute("group", new Group());
-            model.addAttribute("errorMessage", "No such Group");
+            model.addAttribute(GROUP_ATTR, new Group());
+            model.addAttribute(ERROR_MESSAGE_ATTR, "No such Group");
 
         }
         return "group/edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String update(@ModelAttribute("group") Group group, @PathVariable("id") Long id) {
+    public String update(@ModelAttribute(GROUP_ATTR) Group group, @PathVariable("id") Long id) {
         LOGGER.debug("/groups/edit/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         groupService.update(id, group);
-        return "redirect:/groups/";
+        return REDIRECT_TO_GROUPS_MENU;
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
-        LOGGER.info("/groups/delete/{}" + REQUEST_RECEIVING_LOG_MESSAGE, id);
+        LOGGER.info("/groups/delete/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         groupService.delete(id);
-        return "redirect:/groups/";
+        return REDIRECT_TO_GROUPS_MENU;
     }
 
-    @GetMapping("/course-relation/add/{id}")
-    public String addCourseRelation(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/course-relation/add/{group-id}")
+    public String addCourseRelation(@PathVariable("group-id") Long groupId, Model model) {
+        LOGGER.debug("/groups/course-relation/add/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, groupId);
 
-        model.addAttribute("groupId", id);
-        model.addAttribute("courses", groupService.getUnlinkedCourses(id));
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("courses", groupService.getUnlinkedCourses(groupId));
 
         return "/group/add-course";
     }
 
     @PostMapping("/course-relation/{action}")
     public String editGroupRelation(@PathVariable("action") String action, @RequestParam("groupId") Long groupId, @RequestParam("courseId") Long courseId) {
+        LOGGER.debug("/groups/course-relation/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, action);
 
         if(action.equals("link")) {
+            LOGGER.debug("Linking Group ID: {} to the Course ID: {}", groupId, courseId);
+
             groupService.linkCourse(groupId, courseId);
 
         } else if (action.equals("unlink")) {
+            LOGGER.debug("Unlinking Group ID: {} from the Course ID: {}", groupId, courseId);
+
             groupService.unlinkCourse(groupId, courseId);
+        } else {
+            LOGGER.warn("Action {} not recognized. Group ID: {}, Course ID: {}", action, groupId, courseId);
         }
-        return "redirect:/groups/show/" + groupId;
+
+        return REDIRECT_TO_GROUP_SHOW + groupId;
     }
 
 

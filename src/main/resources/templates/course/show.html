@@ -47,7 +47,8 @@
                     <div class="list-group-item d-flex justify-content-between">
 
                         <a th:href="@{/teachers/show/{id}(id=${teacher.getId()})}"
-                           th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}" class="btn py-0 text-start"></a>
+                           th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}"
+                           class="btn py-0 text-start"></a>
 
                         <form th:action="@{/courses/teacher-relation/unlink}" sec:authorize="hasAuthority('ADMIN')"
                               method="POST">

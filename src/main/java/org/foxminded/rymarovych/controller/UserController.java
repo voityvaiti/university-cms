@@ -20,6 +20,12 @@ public class UserController {
 
     static final String REQUEST_RECEIVING_LOG_MESSAGE = " HTTP request received";
 
+    static final String REDIRECT_TO_USERS_MENU = "redirect:/users";
+
+    static final String ERROR_MESSAGE_ATTR = "errorMessage";
+
+    static final String USER_ATTR = "user";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
@@ -56,32 +62,32 @@ public class UserController {
     public String getCurrent(Model model) {
         LOGGER.debug("/users/current GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
-        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        model.addAttribute(USER_ATTR, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return "user/show-info";
     }
     @GetMapping("/new")
     public String newUser(Model model) {
         LOGGER.debug("/users/new GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
-        model.addAttribute("user", new User());
+        model.addAttribute(USER_ATTR, new User());
         return "user/new";
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("user") User user, Model model) {
-        LOGGER.debug("/users/ POST" + REQUEST_RECEIVING_LOG_MESSAGE);
+    public String create(@ModelAttribute(USER_ATTR) User user, Model model) {
+        LOGGER.debug("/users/new POST" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         if(userService.findByUsername(user.getUsername()).isPresent()) {
             LOGGER.debug("Received User to create with duplicated username: {} ", user.getUsername());
 
-            model.addAttribute("user", user);
-            model.addAttribute("errorMessage", USERNAME_DUPLICATION_ERROR_MESSAGE);
+            model.addAttribute(USER_ATTR, user);
+            model.addAttribute(ERROR_MESSAGE_ATTR, USERNAME_DUPLICATION_ERROR_MESSAGE);
             return "user/new";
         }
         userService.add(user);
         LOGGER.debug("User added. Username: {}", user.getUsername());
 
-        return "redirect:/users/";
+        return REDIRECT_TO_USERS_MENU;
     }
 
     @GetMapping("/edit/{id}")
@@ -95,20 +101,20 @@ public class UserController {
 
             LOGGER.debug("Found user to edit. ID: {}, username: {}", user.getId(), user.getUsername());
 
-            model.addAttribute("user", optionalUser.get());
+            model.addAttribute(USER_ATTR, optionalUser.get());
 
         } else {
             LOGGER.warn("Not found user to edit by ID: {}", id);
 
-            model.addAttribute("user", new User());
-            model.addAttribute("errorMessage", "No such user");
+            model.addAttribute(USER_ATTR, new User());
+            model.addAttribute(ERROR_MESSAGE_ATTR, "No such user");
 
         }
         return "user/edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String update(@ModelAttribute("user") User user, Model model, @PathVariable("id") Long id) {
+    public String update(@ModelAttribute(USER_ATTR) User user, Model model, @PathVariable("id") Long id) {
         LOGGER.debug("/users/edit/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         Optional<User> potentialUserWithSameUsername = userService.findByUsername(user.getUsername());
@@ -117,23 +123,23 @@ public class UserController {
             LOGGER.debug("Username duplication of received User is not detected. Updating User: {}", user);
 
             userService.update(id, user);
-            return "redirect:/users/";
+            return REDIRECT_TO_USERS_MENU;
 
         } else {
             LOGGER.debug("Detected username duplication of received User: {}. Update was not executed", user);
 
-            model.addAttribute("user", user);
-            model.addAttribute("errorMessage", USERNAME_DUPLICATION_ERROR_MESSAGE);
+            model.addAttribute(USER_ATTR, user);
+            model.addAttribute(ERROR_MESSAGE_ATTR, USERNAME_DUPLICATION_ERROR_MESSAGE);
             return "user/edit";
         }
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
-        LOGGER.info("/users/delete/{}" + REQUEST_RECEIVING_LOG_MESSAGE, id);
+        LOGGER.info("/users/delete/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         userService.delete(id);
-        return "redirect:/users/";
+        return REDIRECT_TO_USERS_MENU;
     }
 
 
