@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Greetings</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="w-100 d-flex justify-content-center">
+    <div class="mt-4">
+
+        <h1 class="display-4 text-center">Hi!</h1>
+
+        <form class="col" th:method="GET" th:action="@{/menu}">
+            <input type="submit" class="btn btn-primary" value="Let's start"/>
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

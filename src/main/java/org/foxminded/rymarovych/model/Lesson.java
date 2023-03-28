@@ -1,12 +1,18 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "lessons")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Lesson {
 
     @Id
@@ -34,80 +40,17 @@ public class Lesson {
     @ManyToMany(mappedBy = "lessons")
     private Set<Group> groups = new HashSet<>();
 
-    public Lesson() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lesson lesson = (Lesson) o;
+        return number == lesson.number && Objects.equals(id, lesson.id) && Objects.equals(place, lesson.place) && Objects.equals(course, lesson.course) && Objects.equals(teacher, lesson.teacher) && Objects.equals(scheduleForDay, lesson.scheduleForDay);
     }
 
-    public Lesson(int number, String place, Course course, Teacher teacher, ScheduleForDay scheduleForDay) {
-        this.number = number;
-        this.place = place;
-        this.course = course;
-        this.teacher = teacher;
-        this.scheduleForDay = scheduleForDay;
-    }
-
-    public Lesson(Long id, int number, String place, Course course, Teacher teacher, ScheduleForDay scheduleForDay) {
-        this.id = id;
-        this.number = number;
-        this.place = place;
-        this.course = course;
-        this.teacher = teacher;
-        this.scheduleForDay = scheduleForDay;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
-
-    public ScheduleForDay getScheduleForDay() {
-        return scheduleForDay;
-    }
-
-    public void setScheduleForDay(ScheduleForDay scheduleForDay) {
-        this.scheduleForDay = scheduleForDay;
-    }
-
-    public Set<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<Group> groups) {
-        this.groups = groups;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, place, course, teacher, scheduleForDay);
     }
 
     @Override
@@ -116,9 +59,9 @@ public class Lesson {
                 "id=" + id +
                 ", number=" + number +
                 ", place='" + place + '\'' +
-                ", courseId=" + course.getId() +
-                ", teacherId=" + teacher.getId() +
-                ", scheduleForDayId=" + scheduleForDay.getId() +
+                ", course=" + course +
+                ", teacher=" + teacher +
+                ", scheduleForDay=" + scheduleForDay +
                 '}';
     }
 }

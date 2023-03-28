@@ -4,6 +4,7 @@ import org.foxminded.rymarovych.model.Teacher;
 import org.foxminded.rymarovych.service.abstractions.TeacherService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TeacherController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class TeacherControllerTest {
 
     @Autowired
@@ -31,7 +33,12 @@ class TeacherControllerTest {
     void getList() throws Exception {
 
         List<Teacher> expected = new ArrayList<>();
-        expected.add(new Teacher("Some", "Teacher", "Doctor"));
+
+        Teacher teacher = new Teacher(1L, "Some", "Teacher",
+                "Doctor", null, null);
+
+        expected.add(teacher);
+
 
         when(teacherService.getAllTeachersList()).thenReturn(expected);
 

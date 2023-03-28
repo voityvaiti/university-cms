@@ -1,14 +1,16 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "teachers")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Teacher extends Person {
 
     @Column(name = "degree")
@@ -30,41 +32,25 @@ public class Teacher extends Person {
     )
     private Set<Course> courses = new HashSet<>();
 
-
-    public Teacher() {}
-
-    public Teacher(String firstName, String lastName, String degree) {
-        super(firstName, lastName);
-        this.degree = degree;
-    }
-
-    public Teacher(Long id, String firstName, String lastName, String degree) {
+    public Teacher(Long id, String firstName, String lastName, String degree, List<Lesson> lessons, Set<Course> courses) {
         super(id, firstName, lastName);
         this.degree = degree;
-    }
-
-    public String getDegree() {
-        return degree;
-    }
-
-    public void setDegree(String degree) {
-        this.degree = degree;
-    }
-
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<Lesson> lessons) {
         this.lessons = lessons;
-    }
-
-    public Set<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(Set<Course> courses) {
         this.courses = courses;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Teacher teacher = (Teacher) o;
+        return Objects.equals(degree, teacher.degree);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), degree);
     }
 
     @Override

@@ -1,14 +1,21 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+
 
 @Entity
 @Table(name = "courses")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Course {
 
     @Id
@@ -27,58 +34,39 @@ public class Course {
     @ManyToMany(mappedBy = "courses")
     private Set<Teacher> teachers = new HashSet<>();
 
-    public Course() {
+
+    public void addGroup(Group group) {
+        this.groups.add(group);
+        group.getCourses().add(this);
     }
 
-    public Course(String name) {
-        this.name = name;
+    public void removeGroup(Group group) {
+        this.groups.remove(group);
+        group.getCourses().remove(this);
     }
 
-    public Course(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public void addTeacher(Teacher teacher) {
+        this.teachers.add(teacher);
+        teacher.getCourses().add(this);
     }
 
-    public Long getId() {
-        return id;
+    public void removeTeacher(Teacher teacher) {
+        this.teachers.remove(teacher);
+        teacher.getCourses().remove(this);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(id, course.id) && Objects.equals(name, course.name);
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<Lesson> lessons) {
-        this.lessons = lessons;
-    }
-
-    public Set<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<Group> groups) {
-        this.groups = groups;
-    }
-
-    public Set<Teacher> getTeachers() {
-        return teachers;
-    }
-
-    public void setTeachers(Set<Teacher> teachers) {
-        this.teachers = teachers;
-    }
-    
 
     @Override
     public String toString() {

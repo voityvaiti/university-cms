@@ -1,10 +1,17 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "people")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Person {
 
     @Id
@@ -17,42 +24,17 @@ public class Person {
     @Column(name = "last_name")
     private String lastName;
 
-    public Person() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName);
     }
 
-    public Person(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public Person(Long id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName);
     }
 
     @Override

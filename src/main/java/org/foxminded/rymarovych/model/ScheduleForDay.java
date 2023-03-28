@@ -1,13 +1,19 @@
 package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "schedules_for_days")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ScheduleForDay {
 
     @Id
@@ -20,47 +26,24 @@ public class ScheduleForDay {
     @OneToMany(mappedBy = "scheduleForDay")
     private List<Lesson> lessons = new ArrayList<>();
 
-    public ScheduleForDay() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScheduleForDay that = (ScheduleForDay) o;
+        return Objects.equals(id, that.id) && Objects.equals(date, that.date);
     }
 
-    public ScheduleForDay(Date date) {
-        this.date = date;
-    }
-
-    public ScheduleForDay(Long id, Date date) {
-        this.id = id;
-        this.date = date;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<Lesson> lessons) {
-        this.lessons = lessons;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, date);
     }
 
     @Override
     public String toString() {
         return "ScheduleForDay{" +
                 "id=" + id +
-                ", date=" + date.toString() +
+                ", date=" + date +
                 '}';
     }
 }

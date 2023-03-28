@@ -5,6 +5,7 @@ import org.foxminded.rymarovych.model.Student;
 import org.foxminded.rymarovych.service.abstractions.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StudentController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class StudentControllerTest {
 
     @Autowired
@@ -32,7 +34,13 @@ class StudentControllerTest {
     void getList() throws Exception {
 
         List<Student> expected = new ArrayList<>();
-        expected.add(new Student("Some", "Student", new Group()));
+
+        Student student = new Student(1L, "Some", "Student", new Group());
+        student.setFirstName("Some");
+        student.setLastName("Students");
+        student.setGroup(new Group());
+
+        expected.add(student);
 
         when(studentService.getAllStudentsList()).thenReturn(expected);
 

@@ -27,7 +27,9 @@
 
     <tr th:each="group: ${groups}">
       <th scope="row" th:text="${group.getId()}"></th>
-      <th scope="row" th:text="${group.getName()}"></th>
+      <th scope="row">
+        <a class="btn" th:href="@{/groups/show/{id}(id=${group.getId()})}" th:text="${group.getName()}"></a>
+      </th>
       <th scope="row" th:text="${group.getSpeciality()}"></th>
       <th scope="row" th:text="${group.getYear()}"></th>
     </tr>
