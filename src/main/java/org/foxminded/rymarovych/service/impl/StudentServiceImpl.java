@@ -121,7 +121,7 @@ public class StudentServiceImpl implements StudentService {
         if(optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
 
-            LOGGER.debug("Found Student: {} to unlink with Group: {}. Unlinking.", student, student.getGroup());
+            LOGGER.debug("Found Student: {} to unlink from Group: {}. Unlinking.", student, student.getGroup());
 
             student.setGroup(null);
         } else {

@@ -2,6 +2,7 @@ package org.foxminded.rymarovych.service.impl;
 
 import org.foxminded.rymarovych.dao.CourseRepository;
 import org.foxminded.rymarovych.dao.GroupRepository;
+import org.foxminded.rymarovych.dao.StudentRepository;
 import org.foxminded.rymarovych.model.Course;
 import org.foxminded.rymarovych.model.Group;
 import org.foxminded.rymarovych.service.abstractions.GroupService;
@@ -22,6 +23,8 @@ class GroupServiceImplTest {
 
     @MockBean
     GroupRepository groupRepository;
+    @MockBean
+    StudentRepository studentRepository;
     @MockBean
     CourseRepository courseRepository;
 

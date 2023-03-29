@@ -114,6 +114,36 @@ public class GroupController {
         return REDIRECT_TO_GROUPS_MENU;
     }
 
+    @GetMapping("/student-relation/add/{group-id}")
+    public String addStudentRelation(@PathVariable("group-id") Long groupId, Model model) {
+        LOGGER.debug("/groups/student-relation/add/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, groupId);
+
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("students", groupService.getUnlinkedStudents());
+
+        return "/group/add-student";
+    }
+
+    @PostMapping("/student-relation/{action}")
+    public String editStudentRelation(@PathVariable("action") String action, @RequestParam("groupId") Long groupId, @RequestParam("studentId") Long studentId) {
+        LOGGER.debug("/groups/student-relation/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, action);
+
+        if(action.equals("link")) {
+            LOGGER.debug("Linking Group ID: {} to the Student ID: {}", groupId, studentId);
+
+            groupService.linkStudent(groupId, studentId);
+
+        } else if (action.equals("unlink")) {
+            LOGGER.debug("Unlinking Group ID: {} from the Student ID: {}", groupId, studentId);
+
+            groupService.unlinkStudent(studentId);
+        } else {
+            LOGGER.warn("Action {} not recognized. Group ID: {}, Student ID: {}", action, groupId, studentId);
+        }
+
+        return REDIRECT_TO_GROUP_SHOW + groupId;
+    }
+
     @GetMapping("/course-relation/add/{group-id}")
     public String addCourseRelation(@PathVariable("group-id") Long groupId, Model model) {
         LOGGER.debug("/groups/course-relation/add/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, groupId);

@@ -33,6 +33,13 @@
                            th:text="${student.getFirstName() + ' ' + student.getLastName()}"
                            class="btn py-0 text-start"></a>
 
+                        <form th:action="@{/groups/student-relation/unlink}" sec:authorize="hasAuthority('ADMIN')"
+                              method="POST">
+                            <input type="hidden" name="groupId" th:value="${group.id}">
+                            <input type="hidden" name="studentId" th:value="${student.id}">
+                            <input class="btn btn-close" type="submit" value="">
+                        </form>
+
                     </div>
                 </div>
 
@@ -77,6 +84,11 @@
         </div>
 
         <div class="row mb-4">
+
+            <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+                  th:method="GET" th:action="@{/groups/student-relation/add/{id}(id=${group.getId()})}">
+                <input type="submit" class="btn btn-primary" value="Link student"/>
+            </form>
 
             <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
                   th:method="GET" th:action="@{/groups/course-relation/add/{id}(id=${group.getId()})}">
