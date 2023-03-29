@@ -34,7 +34,7 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String index() {
         LOGGER.debug("/groups/ GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 

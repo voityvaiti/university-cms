@@ -59,7 +59,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/groups/edit/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/groups/delete/**").hasAnyAuthority("ADMIN")
                 .requestMatchers("/groups/**").authenticated()
-                
+
                 .requestMatchers("/users/current").authenticated()
                 .requestMatchers("/users/**").hasAuthority("ADMIN")
                 .anyRequest().permitAll()
