@@ -38,19 +38,28 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/menu/**").authenticated()
+
                 .requestMatchers("/courses/group-relation/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/courses/teacher-relation/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/courses/new/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/courses/edit/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/courses/delete/**").hasAnyAuthority("ADMIN")
                 .requestMatchers("/courses/**").authenticated()
+
                 .requestMatchers("/teachers/**").authenticated()
+
+                .requestMatchers("/students/group-relation/**").hasAnyAuthority("ADMIN", "STUFF")
+                .requestMatchers("/students/new/**").hasAnyAuthority("ADMIN", "STUFF")
+                .requestMatchers("/students/edit/**").hasAnyAuthority("ADMIN", "STUFF")
+                .requestMatchers("/students/delete/**").hasAnyAuthority("ADMIN")
                 .requestMatchers("/students/**").authenticated()
+
                 .requestMatchers("/groups/course-relation/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/groups/new/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/groups/edit/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/groups/delete/**").hasAnyAuthority("ADMIN")
                 .requestMatchers("/groups/**").authenticated()
+                
                 .requestMatchers("/users/current").authenticated()
                 .requestMatchers("/users/**").hasAuthority("ADMIN")
                 .anyRequest().permitAll()

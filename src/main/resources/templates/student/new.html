@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New student</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="d-flex justify-content-center pt-5">
+    <div class="w-25">
+
+        <div class="pb-2">
+            <h1 class="display-4 text-center">New student:</h1>
+        </div>
+
+        <form th:method="POST" th:action="@{/students/new}" th:object="${student}">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Name:</span>
+                </div>
+                <input th:field="*{firstName}" type="text" class="form-control"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Speciality:</span>
+                </div>
+                <input th:field="*{lastName}" type="text" class="form-control"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <select class="form-select mb-3" name="groupId">
+                <option th:value="${null}" selected>Select group</option>
+                <option th:each="group: ${groups}" th:value="${group.id}"
+                        th:text="${group.name}"></option>
+            </select>
+
+            <div class="d-flex justify-content-center">
+                <input class="btn btn-primary w-25" type="submit" value="Create">
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

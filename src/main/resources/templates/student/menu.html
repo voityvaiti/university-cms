@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Student menu</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body class="d-flex justify-content-center">
+
+<div class="w-75 mt-4 mb-4 pt-3 pb-3 rounded" style="background-color: #17a2b8;">
+
+    <h1 class="w-100 display-2 text-center align-middle text-light">Student menu</h1>
+
+    <div class="row mb-3 pt-2">
+
+        <div sec:authorize="hasAnyAuthority('ADMIN', 'STUFF', 'STUDENT', 'TEACHER')"
+             class="col d-flex justify-content-center align-items-center">
+            <a href="/students/all" class="w-50 btn btn-info border-light text-center text-info"
+               style="background-color: #fff;">Show all</a>
+        </div>
+
+        <div sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')"
+             class="col d-flex justify-content-center align-items-center">
+            <a href="/students/new" class="w-50 btn btn-info border-light text-center text-info"
+               style="background-color: #fff;">Create new</a>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+</html>
