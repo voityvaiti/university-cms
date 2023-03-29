@@ -106,7 +106,7 @@ public class CourseController {
         LOGGER.debug("/courses/edit/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         courseService.update(id, course);
-        return REDIRECT_TO_COURSES_MENU;
+        return REDIRECT_TO_COURSE_SHOW + id;
 
     }
 

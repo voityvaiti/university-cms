@@ -207,9 +207,10 @@ public class CourseServiceImpl implements CourseService {
             Course course = optionalCourse.get();
             Teacher teacher = optionalTeacher.get();
 
-            LOGGER.debug("Found Course: {} to unlink from Teacher: {}. unlinking.", course, teacher);
+            LOGGER.debug("Found Course: {} to unlink from Teacher: {}. Unlinking.", course, teacher);
 
             course.removeTeacher(teacher);
+
         } else {
             LOGGER.warn("Not found Course and/or Teacher to unlink. Course: {}, Teacher: {}", optionalCourse.isPresent(), optionalTeacher.isPresent());
         }

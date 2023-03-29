@@ -127,7 +127,7 @@ public class StudentController {
             studentService.linkGroup(studentId, groupId);
         }
 
-        return REDIRECT_TO_STUDENTS_MENU;
+        return REDIRECT_TO_STUDENT_SHOW + studentId;
     }
 
     @PostMapping("/delete/{id}")

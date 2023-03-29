@@ -103,7 +103,7 @@ public class GroupController {
         LOGGER.debug("/groups/edit/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
 
         groupService.update(id, group);
-        return REDIRECT_TO_GROUPS_MENU;
+        return REDIRECT_TO_GROUP_SHOW + id;
     }
 
     @PostMapping("/delete/{id}")
