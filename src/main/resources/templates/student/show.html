@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Student</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+  <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div th:if="${optionalStudent.isPresent()}" class="w-100 d-flex justify-content-center">
+  <div th:with="student=${optionalStudent.get()}" class="w-25">
+
+    <h1 class="display-4" th:text="${'Student ID: ' + student.id}"></h1>
+
+    <p th:text="${'First name: ' + student.firstName}"></p>
+
+    <p th:text="${'Last name: ' + student.lastName}"></p>
+
+    <p th:text="'Group: ' + ${student.group?.name ?: 'No group linked'}"></p>
+
+    <div class="row mb-4">
+
+      <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+            th:method="GET" th:action="@{/students/edit/{id}(id=${student.getId()})}">
+        <input type="submit" class="btn btn-primary" value="Edit"/>
+      </form>
+
+      <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST"
+            th:action="@{/students/delete/{id}(id=${student.getId()})}">
+        <input type="submit" class="btn btn-primary" value="Delete"/>
+      </form>
+
+    </div>
+
+    <div class="row mb-4">
+
+      <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+            th:method="POST" th:action="@{/students/group-relation/unlink/{id}(id=${student.getId()})}">
+        <input type="submit" class="btn btn-primary" value="Unlink group"/>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div th:unless="${optionalStudent.isPresent()}">
+  <h1 class="display-2">Student not found</h1>
+</div>
+
+</body>
+</html>

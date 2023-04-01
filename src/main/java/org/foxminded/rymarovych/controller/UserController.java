@@ -35,7 +35,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String index() {
         LOGGER.debug("/users/ GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 

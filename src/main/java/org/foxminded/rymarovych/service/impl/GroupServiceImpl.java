@@ -2,8 +2,10 @@ package org.foxminded.rymarovych.service.impl;
 
 import org.foxminded.rymarovych.dao.CourseRepository;
 import org.foxminded.rymarovych.dao.GroupRepository;
+import org.foxminded.rymarovych.dao.StudentRepository;
 import org.foxminded.rymarovych.model.Course;
 import org.foxminded.rymarovych.model.Group;
+import org.foxminded.rymarovych.model.Student;
 import org.foxminded.rymarovych.service.abstractions.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +23,13 @@ public class GroupServiceImpl implements GroupService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupServiceImpl.class);
 
     private final GroupRepository groupRepository;
+    private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
 
     @Autowired
-    public GroupServiceImpl(GroupRepository groupRepository, CourseRepository courseRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, CourseRepository courseRepository) {
         this.groupRepository = groupRepository;
+        this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
     }
 
@@ -41,6 +45,13 @@ public class GroupServiceImpl implements GroupService {
         LOGGER.debug("Returning Optional Group, found by ID: {}", id);
 
         return groupRepository.findById(id);
+    }
+
+    @Override
+    public List<Student> getUnlinkedStudents() {
+        LOGGER.debug("Returning list of Students with NULL Groups.");
+
+        return studentRepository.findStudentByGroupNull();
     }
 
     @Override
@@ -105,6 +116,46 @@ public class GroupServiceImpl implements GroupService {
         LOGGER.info("Deleting Group by ID: {}", id);
 
         groupRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void linkStudent(Long groupId, Long studentId) {
+        LOGGER.debug("Received groupId: {} to link with studentId: {}", groupId, studentId);
+
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+
+        if(optionalGroup.isPresent() && optionalStudent.isPresent()) {
+            Group group = optionalGroup.get();
+            Student student = optionalStudent.get();
+
+            LOGGER.debug("Found Group: {} to link with Student: {}. Linking.", group, student);
+
+            student.setGroup(group);
+
+        } else {
+            LOGGER.warn("Not found Group and/or Student to link. Group: {}, Student: {}", optionalGroup.isPresent(), optionalStudent.isPresent());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void unlinkStudent(Long studentId) {
+        LOGGER.debug("Received studentId: {} to unlink Group.", studentId);
+
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+
+        if(optionalStudent.isPresent()) {
+            Student student = optionalStudent.get();
+
+            LOGGER.debug("Found Group: {} to unlink from Group: {}. Unlinking.", student.getGroup(), student);
+
+            student.setGroup(null);
+        } else {
+            LOGGER.warn("Not found Student by ID: {} to unlink Group.", studentId);
+        }
+
     }
 
     @Override

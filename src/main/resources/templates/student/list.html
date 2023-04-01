@@ -20,8 +20,7 @@
         <thead>
         <tr>
             <th scope="col">ID</th>
-            <th scope="col">First name</th>
-            <th scope="col">Last name</th>
+            <th scope="col">First/Last name</th>
             <th scope="col">Group ID</th>
             <th scope="col">Group name</th>
         </tr>
@@ -29,10 +28,12 @@
 
         <tr th:each="student: ${students}">
             <th scope="row" th:text="${student.getId()}"></th>
-            <th scope="row" th:text="${student.getFirstName()}"></th>
-            <th scope="row" th:text="${student.getLastName()}"></th>
-            <th scope="row" th:text="${student.getGroup().getId()}"></th>
-            <th scope="row" th:text="${student.getGroup().getName()}"></th>
+            <th scope="row">
+                <a class="btn" th:href="@{/students/show/{id}(id=${student.getId()})}"
+                   th:text="${student.getFirstName() + ' ' + student.getLastName()}"></a>
+            </th>
+            <th scope="row" th:text="${student.group?.id}"></th>
+            <th scope="row" th:text="${student.group?.id}"></th>
         </tr>
     </table>
 

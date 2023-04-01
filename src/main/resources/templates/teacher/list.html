@@ -20,16 +20,17 @@
         <thead>
         <tr>
             <th scope="col">ID</th>
-            <th scope="col">First name</th>
-            <th scope="col">Last name</th>
+            <th scope="col">First/Last name</th>
             <th scope="col">Degree</th>
         </tr>
         </thead>
 
         <tr th:each="teacher: ${teachers}">
             <th scope="row" th:text="${teacher.getId()}"></th>
-            <th scope="row" th:text="${teacher.getFirstName()}"></th>
-            <th scope="row" th:text="${teacher.getLastName()}"></th>
+            <th scope="row">
+                <a class="btn" th:href="@{/teachers/show/{id}(id=${teacher.getId()})}"
+                   th:text="${teacher.getFirstName() + ' ' + teacher.getLastName()}"></a>
+            </th>
             <th scope="row" th:text="${teacher.getDegree()}"></th>
         </tr>
     </table>

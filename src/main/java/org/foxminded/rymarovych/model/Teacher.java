@@ -32,6 +32,17 @@ public class Teacher extends Person {
     )
     private Set<Course> courses = new HashSet<>();
 
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
+        course.getTeachers().add(this);
+    }
+
+    public void removeCourse(Course course) {
+        this.courses.remove(course);
+        course.getTeachers().remove(this);
+    }
+
     public Teacher(Long id, String firstName, String lastName, String degree, List<Lesson> lessons, Set<Course> courses) {
         super(id, firstName, lastName);
         this.degree = degree;

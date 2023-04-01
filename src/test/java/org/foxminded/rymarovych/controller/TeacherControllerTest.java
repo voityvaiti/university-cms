@@ -11,10 +11,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,5 +51,61 @@ class TeacherControllerTest {
                 .andExpect(model().attribute("teachers", expected));
 
         verify(teacherService).getAllTeachersList();
+    }
+
+    @Test
+    void editIfTeacherIsPresent() throws Exception {
+        Teacher teacher = new Teacher(4L, "firstname", "lastname",
+                "doctor", null, null);
+
+        when(teacherService.findById(teacher.getId())).thenReturn(Optional.of(teacher));
+
+        mvc.perform(get("/teachers/edit/" + teacher.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("teacher"))
+                .andExpect(model().attribute("teacher", teacher));
+
+        verify(teacherService).findById(teacher.getId());
+    }
+
+    @Test
+    void editIfGroupIsAbsent() throws Exception {
+        Long id = 3L;
+
+        when(teacherService.findById(any())).thenReturn(Optional.empty());
+
+        mvc.perform(get("/teachers/edit/" + id))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("errorMessage"));
+
+        verify(teacherService).findById(id);
+    }
+
+    @Test
+    void linkCourseIfActionIsLink() throws Exception {
+        String action = "link";
+
+        String teacherId = "4";
+        String courseId = "8";
+
+        mvc.perform(post("/teachers/course-relation/" + action)
+                .param("teacherId", teacherId)
+                .param("courseId", courseId));
+
+        verify(teacherService).linkCourse(Long.parseLong(teacherId), Long.parseLong(courseId));
+    }
+
+    @Test
+    void unlinkCourseIfActionIsUnlink() throws Exception {
+        String action = "unlink";
+
+        String teacherId = "4";
+        String courseId = "8";
+
+        mvc.perform(post("/teachers/course-relation/" + action)
+                .param("teacherId", teacherId)
+                .param("courseId", courseId));
+
+        verify(teacherService).unlinkCourse(Long.parseLong(teacherId), Long.parseLong(courseId));
     }
 }

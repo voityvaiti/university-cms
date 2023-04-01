@@ -41,7 +41,7 @@ public class Student extends Person {
     public String toString() {
         return  "Student{" +
                 super.toString() +
-                ", groupId=" + group.getId() +
+                ", group: " + group +
                 '}';
     }
 }
