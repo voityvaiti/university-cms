@@ -34,25 +34,19 @@ CREATE TABLE IF NOT EXISTS courses
 
 CREATE TABLE IF NOT EXISTS lessons
 (
-    id          SERIAL PRIMARY KEY,
-    place       VARCHAR(120),
-    course_id   INT,
-    teacher_id  INT,
-    schedule_id INT,
-    number      INT
-);
-
-CREATE TABLE IF NOT EXISTS schedules_for_days
-(
-    id  SERIAL PRIMARY KEY,
-    day DATE
+    id         SERIAL PRIMARY KEY,
+    place      VARCHAR(120),
+    course_id  INT,
+    teacher_id INT,
+    number     INT,
+    date       DATE
 );
 
 CREATE TABLE IF NOT EXISTS groups_courses
 (
-    id         SERIAL PRIMARY KEY,
-    group_id INT,
-    course_id  INT,
+    id        SERIAL PRIMARY KEY,
+    group_id  INT,
+    course_id INT,
     FOREIGN KEY (group_id) REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
