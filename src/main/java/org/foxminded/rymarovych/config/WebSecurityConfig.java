@@ -51,8 +51,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/teachers/edit/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/teachers/delete/**").hasAnyAuthority("ADMIN")
                 .requestMatchers("/teachers/**").authenticated()
-
-                .requestMatchers("/students/group-relation/**").hasAnyAuthority("ADMIN", "STUFF")
+                
                 .requestMatchers("/students/new/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/students/edit/**").hasAnyAuthority("ADMIN", "STUFF")
                 .requestMatchers("/students/delete/**").hasAnyAuthority("ADMIN")

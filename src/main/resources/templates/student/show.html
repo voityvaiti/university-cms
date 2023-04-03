@@ -35,15 +35,6 @@
 
     </div>
 
-    <div class="row mb-4">
-
-      <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
-            th:method="POST" th:action="@{/students/group-relation/unlink/{id}(id=${student.getId()})}">
-        <input type="submit" class="btn btn-primary" value="Unlink group"/>
-      </form>
-
-    </div>
-
   </div>
 </div>
 

@@ -3,6 +3,7 @@ package org.foxminded.rymarovych.controller;
 import org.foxminded.rymarovych.model.Group;
 import org.foxminded.rymarovych.model.Student;
 import org.foxminded.rymarovych.service.abstractions.StudentService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,16 +32,20 @@ class StudentControllerTest {
     @MockBean
     private StudentService studentService;
 
+    private static Student student;
+
+    @BeforeAll
+    static void setUp() {
+        Group group = new Group(5L, "groupname", "spec", 3, null, null, null);
+
+        student = new Student(1L, "Some", "Student", group);
+    }
+
 
     @Test
     void getList() throws Exception {
 
         List<Student> expected = new ArrayList<>();
-
-        Student student = new Student(1L, "Some", "Student", new Group());
-        student.setFirstName("Some");
-        student.setLastName("Students");
-        student.setGroup(new Group());
 
         expected.add(student);
 
@@ -56,34 +61,26 @@ class StudentControllerTest {
 
     @Test
     void create_ShouldAddStudentAndLinkGroup_IfGroupIdIsPresent() throws Exception {
-        Student student = new Student(3L, "firstname", "lastname", null);
-        Long groupId = 7L;
-
-        this.mvc.perform(post("/students/new")
-                .flashAttr("student", student)
-                .param("groupId", String.valueOf(groupId)));
-
-
-        verify(studentService).add(student);
-        verify(studentService).linkGroup(student.getId(), groupId);
-    }
-
-    @Test
-    void create_shouldAddStudentAndNotLinkGroup_ifGroupIdIsAbsent() throws Exception {
-        Student student = new Student(3L, "firstname", "lastname", null);
 
         this.mvc.perform(post("/students/new")
                 .flashAttr("student", student));
 
 
         verify(studentService).add(student);
-        verify(studentService, never()).linkGroup(any(), any());
+    }
+
+    @Test
+    void create_shouldAddStudentAndNotLinkGroup_ifGroupIdIsAbsent() throws Exception {
+
+        this.mvc.perform(post("/students/new")
+                .flashAttr("student", student));
+
+
+        verify(studentService).add(student);
     }
 
     @Test
     void edit_shouldSendStudentAndAllGroups_ifStudentIsPresent() throws Exception {
-        Long id = 3L;
-        Student student = new Student(id, "firstname", "lastname", null);
 
         Group group1 = new Group(1L, "name1", "spec1", 1, null, null, null);
         Group group2 = new Group(2L, "name2", "spec2", 2, null, null, null);
@@ -91,16 +88,16 @@ class StudentControllerTest {
 
         List<Group> groups = Arrays.asList(group1, group2, group3);
 
-        when(studentService.findById(id)).thenReturn(Optional.of(student));
+        when(studentService.findById(student.getId())).thenReturn(Optional.of(student));
         when(studentService.getAllGroups()).thenReturn(groups);
 
-        mvc.perform(get("/students/edit/" + id))
+        mvc.perform(get("/students/edit/" + student.getId()))
                 .andExpect(model().attributeExists("student"))
                 .andExpect(model().attributeExists("groups"))
                 .andExpect(model().attribute("student", student))
                 .andExpect(model().attribute("groups", groups));
 
-        verify(studentService).findById(id);
+        verify(studentService).findById(student.getId());
         verify(studentService).getAllGroups();
     }
 
@@ -119,27 +116,21 @@ class StudentControllerTest {
 
     @Test
     void update_shouldUpdateAndLinkGroup_ifGroupIdIsPresent() throws Exception {
-        Long studentId = 3L;
         Long groupId = 7L;
-        Student student = new Student(studentId, "firstname", "lastname", null);
 
-        mvc.perform(post("/students/edit/" + studentId)
+        mvc.perform(post("/students/edit/" + student.getId())
                 .flashAttr("student", student)
                 .param("groupId", String.valueOf(groupId)));
 
-        verify(studentService).update(studentId, student);
-        verify(studentService).linkGroup(studentId, groupId);
+        verify(studentService).update(student.getId(), student);
     }
 
     @Test
     void update_shouldUpdateAndNotLinkGroup_ifGroupIdIsAbsent() throws Exception {
-        Long studentId = 3L;
-        Student student = new Student(studentId, "firstname", "lastname", null);
 
-        mvc.perform(post("/students/edit/" + studentId)
+        mvc.perform(post("/students/edit/" + student.getId())
                 .flashAttr("student", student));
 
-        verify(studentService).update(studentId, student);
-        verify(studentService, never()).linkGroup(any(), any());
+        verify(studentService).update(student.getId(), student);
     }
 }

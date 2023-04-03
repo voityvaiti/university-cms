@@ -72,19 +72,11 @@ public class StudentController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute(STUDENT_ATTR) Student student, @RequestParam(name = "groupId") Optional<Long> optionalGroupId) {
+    public String create(@ModelAttribute(STUDENT_ATTR) Student student) {
         LOGGER.debug("/students/new POST" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         studentService.add(student);
         LOGGER.debug("Student added: {}", student);
-
-        if (optionalGroupId.isPresent()) {
-            Long groupId = optionalGroupId.get();
-
-            LOGGER.debug("Noticed groupId: {} to link with new Student: {}. Linking.", groupId, student);
-
-            studentService.linkGroup(student.getId(), groupId);
-        }
 
         return REDIRECT_TO_STUDENTS_MENU;
     }
@@ -114,18 +106,11 @@ public class StudentController {
     }
 
     @PostMapping("/edit/{id}")
-    public String update(@ModelAttribute(STUDENT_ATTR) Student student, @PathVariable("id") Long studentId, @RequestParam(name = "groupId") Optional<Long> optionalGroupId) {
+    public String update(@ModelAttribute(STUDENT_ATTR) Student student, @PathVariable("id") Long studentId) {
         LOGGER.debug("/students/edit/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, studentId);
 
         studentService.update(studentId, student);
-
-        if (optionalGroupId.isPresent()) {
-            Long groupId = optionalGroupId.get();
-
-            LOGGER.debug("Noticed Group ID: {} to link with updated Student ID: {}. Linking...", groupId, studentId);
-
-            studentService.linkGroup(studentId, groupId);
-        }
+        LOGGER.debug("Student updated: {}", student);
 
         return REDIRECT_TO_STUDENT_SHOW + studentId;
     }
@@ -136,15 +121,6 @@ public class StudentController {
 
         studentService.delete(id);
         return REDIRECT_TO_STUDENTS_MENU;
-    }
-
-    @PostMapping("/group-relation/unlink/{student-id}")
-    public String unlinkGroup(@PathVariable("student-id") Long id) {
-        LOGGER.debug("/students/group-relation/unlink/{} POST" + REQUEST_RECEIVING_LOG_MESSAGE, id);
-
-        studentService.unlinkGroup(id);
-
-        return REDIRECT_TO_STUDENT_SHOW + id;
     }
 
 }
