@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping("")
     public String index() {
-        LOGGER.debug("/users/ GET" + REQUEST_RECEIVING_LOG_MESSAGE);
+        LOGGER.debug("/users GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         return "user/menu";
     }

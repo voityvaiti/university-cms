@@ -19,7 +19,15 @@
 
     <p th:text="${'Last name: ' + student.lastName}"></p>
 
-    <p th:text="'Group: ' + ${student.group?.name ?: 'No group linked'}"></p>
+    <p> Group:
+
+    <a th:if="${student.group != null}"
+       th:href="@{/groups/show/{id}(id=${student.group.id})}"
+       th:text="${student.group.name}" class="btn"></a>
+
+    <span th:unless="${student.group != null}" th:text="'No group linked'"></span>
+
+    </p>
 
     <div class="row mb-4">
 

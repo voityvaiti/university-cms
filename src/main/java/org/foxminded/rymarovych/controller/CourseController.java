@@ -37,7 +37,7 @@ public class CourseController {
 
     @GetMapping("")
     public String index() {
-        LOGGER.debug("/courses/ GET" + REQUEST_RECEIVING_LOG_MESSAGE);
+        LOGGER.debug("/courses GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         return "course/menu";
     }
