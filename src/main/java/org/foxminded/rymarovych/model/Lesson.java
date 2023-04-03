@@ -2,6 +2,7 @@ package org.foxminded.rymarovych.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ public class Lesson {
     private String place;
 
     @Column(name = "date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
     @ManyToOne
@@ -40,6 +42,16 @@ public class Lesson {
     @ManyToMany(mappedBy = "lessons")
     private Set<Group> groups = new HashSet<>();
 
+
+    public void addGroup(Group group) {
+        this.groups.add(group);
+        group.getLessons().add(this);
+    }
+
+    public void removeGroup(Group group) {
+        this.groups.remove(group);
+        group.getLessons().remove(this);
+    }
 
     @Override
     public boolean equals(Object o) {

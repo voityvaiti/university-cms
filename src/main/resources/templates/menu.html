@@ -45,6 +45,20 @@
 
     <div class="row mb-3">
 
+        <div class="col-6 d-flex justify-content-center align-items-center">
+            <a href="/lessons" class="w-50 btn btn-info border-light text-center text-info"
+               style="background-color: #fff;">Lessons</a>
+        </div>
+
+        <div class="col-6 d-flex justify-content-center align-items-center">
+            <a href="#" class="w-50 btn btn-info border-light text-center text-info"
+               style="background-color: #fff;">My Schedule</a>
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+
         <div sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center align-items-center">
             <a href="/users" class="w-50 btn btn-info border-dark text-center text-info"
                style="background-color: black;">USERS</a>

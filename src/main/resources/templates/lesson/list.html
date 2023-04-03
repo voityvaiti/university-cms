@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Lessons</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+
+<body class="d-flex justify-content-center">
+
+<div class="w-75 mb-4">
+
+    <h1 class="text-center display-2 mb-4 mt-3">Lessons list:</h1>
+
+    <table th:each="lessonForDay: ${lessonsForDays}" class="table mb-4">
+        <p class="h4" th:text="${#dates.format(lessonForDay.date, 'dd-MM-yyyy')}"></p>
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Number</th>
+            <th scope="col">Place</th>
+            <th scope="col">Date</th>
+            <th scope="col">Course</th>
+            <th scope="col">Teacher</th>
+            <th scope="col">Groups</th>
+        </tr>
+        </thead>
+
+        <tr th:each="lesson: ${lessonForDay.lessons}">
+            <th scope="row">
+                <a class="btn" th:href="@{/lessons/show/{id}(id=${lesson.id})}"
+                   th:text="${lesson.id}"></a>
+            </th>
+            <th scope="row" th:text="${lesson.number}"></th>
+            <th scope="row" th:text="${lesson.place}"></th>
+            <th scope="row" th:text="${#dates.format(lesson.date, 'dd-MM-yyyy')}"></th>
+            <th scope="row" th:text="${lesson.course?.name}"></th>
+            <th scope="row" th:text="${lesson.teacher?.firstName + ' ' + lesson.teacher?.lastName}"></th>
+            <th scope="row">
+                <span th:each="group, iter: ${lesson.groups}">
+                    <span th:text="${group.name}"></span>
+                    <span th:if="${!iter.last}">,</span>
+                </span>
+            </th>
+        </tr>
+    </table>
+
+</div>
+
+</body>
+</html>
