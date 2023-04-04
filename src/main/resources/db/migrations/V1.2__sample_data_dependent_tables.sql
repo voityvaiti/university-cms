@@ -1,11 +1,3 @@
-INSERT INTO schedules_for_days (day)
-VALUES ('2023-02-13'),
-       ('2023-02-14'),
-       ('2023-02-15'),
-       ('2023-02-16'),
-       ('2023-02-17'),
-       ('2023-02-18'),
-       ('2023-02-19');
 
 INSERT INTO teachers (id, degree)
 VALUES (108, 'Assistant Professor'),

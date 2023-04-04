@@ -18,8 +18,4 @@ public interface StudentService {
     Student update(Long id, Student student);
 
     void delete(Long id);
-
-    void linkGroup(Long studentId, Long groupId);
-
-    void  unlinkGroup(Long studentId);
 }

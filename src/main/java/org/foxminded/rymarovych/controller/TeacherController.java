@@ -38,7 +38,7 @@ public class TeacherController {
 
     @GetMapping("")
     public String index() {
-        LOGGER.debug("/teachers/ GET" + REQUEST_RECEIVING_LOG_MESSAGE);
+        LOGGER.debug("/teachers GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         return "teacher/menu";
     }

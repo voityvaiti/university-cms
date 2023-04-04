@@ -36,7 +36,7 @@ public class GroupController {
 
     @GetMapping("")
     public String index() {
-        LOGGER.debug("/groups/ GET" + REQUEST_RECEIVING_LOG_MESSAGE);
+        LOGGER.debug("/groups GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
         return "group/menu";
     }

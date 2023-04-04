@@ -19,7 +19,15 @@
 
     <p th:text="${'Last name: ' + student.lastName}"></p>
 
-    <p th:text="'Group: ' + ${student.group?.name ?: 'No group linked'}"></p>
+    <p> Group:
+
+    <a th:if="${student.group != null}"
+       th:href="@{/groups/show/{id}(id=${student.group.id})}"
+       th:text="${student.group.name}" class="btn"></a>
+
+    <span th:unless="${student.group != null}" th:text="'No group linked'"></span>
+
+    </p>
 
     <div class="row mb-4">
 
@@ -31,15 +39,6 @@
       <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST"
             th:action="@{/students/delete/{id}(id=${student.getId()})}">
         <input type="submit" class="btn btn-primary" value="Delete"/>
-      </form>
-
-    </div>
-
-    <div class="row mb-4">
-
-      <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
-            th:method="POST" th:action="@{/students/group-relation/unlink/{id}(id=${student.getId()})}">
-        <input type="submit" class="btn btn-primary" value="Unlink group"/>
       </form>
 
     </div>

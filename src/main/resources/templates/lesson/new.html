@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New lesson</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="d-flex justify-content-center pt-5">
+    <div class="w-25">
+
+        <div class="pb-2">
+            <h1 class="display-4 text-center">New lesson:</h1>
+        </div>
+
+        <form th:method="POST" th:action="@{/lessons/new}" th:object="${lesson}">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Number:</span>
+                </div>
+                <input th:field="*{number}" type="number" max="8" min="1" class="form-control"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Place:</span>
+                </div>
+                <input th:field="*{place}" type="text" class="form-control"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Date:</span>
+            </div>
+            <input th:field="*{date}" type="date" pattern="dd-mm-yyyy" class="form-control"
+                   aria-describedby="inputGroup-sizing-default">
+          </div>
+
+            <select th:field="*{course}" class="form-select mb-3">
+                <option th:value="${null}" selected>Select course</option>
+                <option th:each="course: ${courses}" th:value="${course.id}"
+                        th:text="${course.name}"></option>
+            </select>
+
+            <select th:field="*{teacher}" class="form-select mb-3">
+                <option th:value="${null}" selected>Select teacher</option>
+                <option th:each="teacher: ${teachers}" th:value="${teacher.id}"
+                        th:text="${teacher.firstName + ' ' + teacher.lastName}"></option>
+            </select>
+
+            <select name="groupId" class="form-select mb-3">
+                <option th:value="${null}" selected>Select group</option>
+                <option th:each="group: ${groups}" th:value="${group.id}"
+                        th:text="${group.name}"></option>
+            </select>
+
+            <div class="d-flex justify-content-center">
+                <input class="btn btn-primary w-25" type="submit" value="Create">
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

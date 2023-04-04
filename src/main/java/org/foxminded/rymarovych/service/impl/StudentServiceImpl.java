@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +70,7 @@ public class StudentServiceImpl implements StudentService {
 
             currentStudent.setFirstName(student.getFirstName());
             currentStudent.setLastName(student.getLastName());
+            currentStudent.setGroup(student.getGroup());
 
             LOGGER.debug("Saving updated Student: {}", currentStudent);
 
@@ -89,46 +89,5 @@ public class StudentServiceImpl implements StudentService {
 
         studentRepository.deleteById(id);
     }
-
-    @Override
-    @Transactional
-    public void linkGroup(Long studentId, Long groupId) {
-        LOGGER.debug("Received studentId: {} to link with groupId: {}", studentId, groupId);
-
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
-
-        if(optionalStudent.isPresent() && optionalGroup.isPresent()) {
-            Student student = optionalStudent.get();
-            Group group = optionalGroup.get();
-
-            LOGGER.debug("Found Student: {} to link with Group: {}. Linking.", student, group);
-
-            student.setGroup(group);
-
-        } else {
-            LOGGER.warn("Not found Student and/or Group to link. Student: {}, Group: {}", optionalStudent.isPresent(), optionalGroup.isPresent());
-        }
-    }
-
-    @Override
-    @Transactional
-    public void unlinkGroup(Long studentId) {
-        LOGGER.debug("Received studentId: {} to unlink Group.", studentId);
-
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
-
-        if(optionalStudent.isPresent()) {
-            Student student = optionalStudent.get();
-
-            LOGGER.debug("Found Student: {} to unlink from Group: {}. Unlinking.", student, student.getGroup());
-
-            student.setGroup(null);
-        } else {
-            LOGGER.warn("Not found Student by ID: {} to unlink Group.", studentId);
-        }
-
-    }
-
 
 }

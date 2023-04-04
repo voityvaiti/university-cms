@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div th:if="${optionalLesson.isPresent()}" class="w-100 d-flex justify-content-center">
+    <div th:with="lesson=${optionalLesson.get()}" class="w-25">
+
+        <h1 class="display-4" th:text="${'Lesson ID: ' + lesson.id}"></h1>
+
+        <p th:text="${'Number: ' + lesson.number}"></p>
+
+        <p th:text="${'Place: ' + lesson.place}"></p>
+
+        <p th:text="${'Date: ' + #dates.format(lesson.date, 'dd-MM-yyyy')}"></p>
+
+        <p> Course:
+
+            <a th:if="${lesson.course != null}"
+               th:href="@{/courses/show/{id}(id=${lesson.course.id})}"
+               th:text="${lesson.course.name}" class="btn"></a>
+
+            <span th:unless="${lesson.course != null}" th:text="'No course assigned'"></span>
+
+        </p>
+
+        <p> Teacher:
+
+            <a th:if="${lesson.teacher != null}"
+               th:href="@{/teachers/show/{id}(id=${lesson.teacher.id})}"
+               th:text="${lesson.teacher.firstName + ' ' + lesson.teacher.lastName}" class="btn"></a>
+
+            <span th:unless="${lesson.teacher != null}" th:text="'No teacher assigned'"></span>
+
+        </p>
+
+        <div class="row mb-4">
+
+            <div class="col">
+                <p>Groups:</p>
+
+                <div th:each="group: ${lesson.groups}" class="list-group">
+                    <div class="list-group-item d-flex justify-content-between">
+
+                        <a th:href="@{/groups/show/{id}(id=${group.id})}"
+                           th:text="${group.name}"
+                           class="btn py-0 text-start"></a>
+
+                        <form th:action="@{/lessons/group-relation/unlink}" sec:authorize="hasAuthority('ADMIN')"
+                              method="POST">
+                            <input type="hidden" name="lessonId" th:value="${lesson.id}">
+                            <input type="hidden" name="groupId" th:value="${group.id}">
+                            <input class="btn btn-close" type="submit" value="">
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    <div class="row mb-4">
+
+        <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+              th:method="GET" th:action="@{/lessons/edit/{id}(id=${lesson.id})}">
+            <input type="submit" class="btn btn-primary" value="Edit"/>
+        </form>
+
+        <form sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center" th:method="POST"
+              th:action="@{/lessons/delete/{id}(id=${lesson.id})}">
+            <input type="submit" class="btn btn-primary" value="Delete"/>
+        </form>
+
+    </div>
+
+    <div class="row mb-4">
+
+        <form sec:authorize="hasAnyAuthority('ADMIN', 'STUFF')" class="col d-flex justify-content-center"
+              th:method="GET" th:action="@{/lessons/group-relation/add/{id}(id=${lesson.id})}">
+            <input type="submit" class="btn btn-primary" value="Link group"/>
+        </form>
+
+    </div>
+
+</div>
+</div>
+
+<div th:unless="${optionalLesson.isPresent()}">
+    <h1 class="display-2">Lesson not found</h1>
+</div>
+
+</body>
+</html>
