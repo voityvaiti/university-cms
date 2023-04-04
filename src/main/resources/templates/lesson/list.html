@@ -15,38 +15,50 @@
 
     <h1 class="text-center display-2 mb-4 mt-3">Lessons list:</h1>
 
-    <table th:each="lessonForDay: ${lessonsForDays}" class="table mb-4">
-        <p class="h4" th:text="${#dates.format(lessonForDay.date, 'dd-MM-yyyy')}"></p>
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Number</th>
-            <th scope="col">Place</th>
-            <th scope="col">Date</th>
-            <th scope="col">Course</th>
-            <th scope="col">Teacher</th>
-            <th scope="col">Groups</th>
-        </tr>
-        </thead>
+    <div th:if="${lessonsForDays?.isEmpty()}">
+        <p class="text-center">No lessons found</p>
+    </div>
 
-        <tr th:each="lesson: ${lessonForDay.lessons}">
-            <th scope="row">
-                <a class="btn" th:href="@{/lessons/show/{id}(id=${lesson.id})}"
-                   th:text="${lesson.id}"></a>
-            </th>
-            <th scope="row" th:text="${lesson.number}"></th>
-            <th scope="row" th:text="${lesson.place}"></th>
-            <th scope="row" th:text="${#dates.format(lesson.date, 'dd-MM-yyyy')}"></th>
-            <th scope="row" th:text="${lesson.course?.name}"></th>
-            <th scope="row" th:text="${lesson.teacher?.firstName + ' ' + lesson.teacher?.lastName}"></th>
-            <th scope="row">
+    <div th:unless="${lessonsForDays?.isEmpty()}">
+
+        <table th:each="lessonForDay: ${lessonsForDays}" class="table mb-4">
+            <p class="h4" th:text="${#dates.format(lessonForDay.date, 'dd-MM-yyyy')}"></p>
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Number</th>
+                <th scope="col">Place</th>
+                <th scope="col">Date</th>
+                <th scope="col">Course</th>
+                <th scope="col">Teacher</th>
+                <th scope="col">Groups</th>
+            </tr>
+            </thead>
+
+            <tr th:each="lesson: ${lessonForDay.lessons}">
+                <th scope="row">
+                    <a class="btn" th:href="@{/lessons/show/{id}(id=${lesson.id})}"
+                       th:text="${lesson.id}"></a>
+                </th>
+                <th scope="row" th:text="${lesson.number}"></th>
+                <th scope="row" th:text="${lesson.place}"></th>
+                <th scope="row" th:text="${#dates.format(lesson.date, 'dd-MM-yyyy')}"></th>
+                <th scope="row" th:text="${lesson.course?.name}"></th>
+                <th scope="row" th:text="${lesson.teacher?.firstName + ' ' + lesson.teacher?.lastName}"></th>
+                <th scope="row">
                 <span th:each="group, iter: ${lesson.groups}">
                     <span th:text="${group.name}"></span>
                     <span th:if="${!iter.last}">,</span>
                 </span>
-            </th>
-        </tr>
-    </table>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="mt-3" style="color:red;">
+        <h1 class="display-6 text-center" th:if="${errorMessage != null}" th:text="${errorMessage}"></h1>
+    </div>
 
 </div>
 

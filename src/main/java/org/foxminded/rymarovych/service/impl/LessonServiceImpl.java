@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,17 +42,65 @@ public class LessonServiceImpl implements LessonService {
     public List<LessonsForDayDto> getAllLessonsForDaysSortedList() {
         LOGGER.debug("Returning sorted list of all Lessons for days,");
 
-        return lessonRepository.findAll().stream()
-                .collect(Collectors.groupingBy(Lesson::getDate))
-                .entrySet().stream()
-                .map(e -> {
-                    List<Lesson> sortedLessons = e.getValue().stream()
-                            .sorted(Comparator.comparing(Lesson::getNumber))
-                            .toList();
-                    return new LessonsForDayDto(sortedLessons, e.getKey());
-                })
-                .sorted(Comparator.comparing(LessonsForDayDto::getDate))
-                .toList();
+        return splitLessonListToLessonsForDayList(lessonRepository.findAll());
+    }
+
+    @Override
+    public List<LessonsForDayDto> getLessonsForDaysSortedListByGroupAndDateRange(Long groupId, Date startDate, Date endDate) {
+        LOGGER.debug("Received request for sorted by number and date LessonsForDays list. " +
+                "Params: groupId: {}, startDate: {}, endDate: {}", groupId, startDate, endDate);
+
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+
+        if(optionalGroup.isPresent()) {
+            Group group = optionalGroup.get();
+
+            LOGGER.debug("Found Group to get LessonsForDays list: {}", group);
+
+            List<LessonsForDayDto> lessonsForDayDtos = splitLessonListToLessonsForDayList(
+                    lessonRepository.findAllByGroupsContainsAndDateBetween(group, startDate, endDate)
+            );
+
+
+            LOGGER.debug("Returning LessonsForDays sorted list: {}, " +
+                    "found by groupId: {}, startDate: {} and endDate: {}", lessonsForDayDtos, groupId, startDate, endDate);
+
+            return lessonsForDayDtos;
+
+        } else {
+            LOGGER.warn("Not found any Group by ID: {}. Returning an empty ArrayList.", groupId);
+
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<LessonsForDayDto> getLessonsForDaysSortedListByTeacherAndDateRange(Long teacherId, Date startDate, Date endDate) {
+        LOGGER.debug("Received request for sorted by number and date LessonsForDays list. " +
+                "Params: teacherId: {}, startDate: {}, endDate: {}", teacherId, startDate, endDate);
+
+        Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
+
+        if(optionalTeacher.isPresent()) {
+            Teacher teacher = optionalTeacher.get();
+
+            LOGGER.debug("Found Teacher to get LessonsForDays list: {}", teacher);
+
+            List<LessonsForDayDto> lessonsForDayDtos = splitLessonListToLessonsForDayList(
+                    lessonRepository.findAllByTeacherAndDateBetween(teacher, startDate, endDate)
+            );
+
+
+            LOGGER.debug("Returning LessonsForDays sorted list: {}, " +
+                    "found by teacherId: {}, startDate: {} and endDate: {}", lessonsForDayDtos, teacherId, startDate, endDate);
+
+            return lessonsForDayDtos;
+
+        } else {
+            LOGGER.warn("Not found any Teacher by ID: {}. Returning an empty ArrayList.", teacherId);
+
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -191,5 +236,20 @@ public class LessonServiceImpl implements LessonService {
         } else {
             LOGGER.warn("Not found Lesson and/or Group to unlink. Lesson: {}, Group: {}", optionalLesson.isPresent(), optionalGroup.isPresent());
         }
+    }
+
+    public List<LessonsForDayDto> splitLessonListToLessonsForDayList(List<Lesson> lessons) {
+
+        return lessons.stream()
+                .collect(Collectors.groupingBy(Lesson::getDate))
+                .entrySet().stream()
+                .map(e -> {
+                    List<Lesson> sortedLessons = e.getValue().stream()
+                            .sorted(Comparator.comparing(Lesson::getNumber))
+                            .toList();
+                    return new LessonsForDayDto(sortedLessons, e.getKey());
+                })
+                .sorted(Comparator.comparing(LessonsForDayDto::getDate))
+                .toList();
     }
 }
