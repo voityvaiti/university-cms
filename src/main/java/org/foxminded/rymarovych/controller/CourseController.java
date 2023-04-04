@@ -35,7 +35,7 @@ public class CourseController {
     }
 
 
-    @GetMapping("")
+    @GetMapping()
     public String index() {
         LOGGER.debug("/courses GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
