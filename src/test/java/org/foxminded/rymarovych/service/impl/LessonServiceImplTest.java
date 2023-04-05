@@ -8,6 +8,7 @@ import org.foxminded.rymarovych.model.Course;
 import org.foxminded.rymarovych.model.Group;
 import org.foxminded.rymarovych.model.Lesson;
 import org.foxminded.rymarovych.model.Teacher;
+import org.foxminded.rymarovych.model.dto.LessonsForDayDto;
 import org.foxminded.rymarovych.service.abstractions.LessonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,5 +103,37 @@ class LessonServiceImplTest {
 
         verify(courseRepository, never()).save(any());
 
+    }
+
+    @Test
+    void splitLessonListToLessonsForDayList() throws ParseException {
+
+        Date date1 = new SimpleDateFormat("yyyyMMdd").parse("20211027");
+        Date date2 = new SimpleDateFormat("yyyyMMdd").parse("20211029");
+
+        Lesson lesson1 = new Lesson();
+        lesson1.setNumber(3);
+        lesson1.setDate(date1);
+
+        Lesson lesson2 = new Lesson();
+        lesson2.setNumber(4);
+        lesson2.setDate(date1);
+
+        Lesson lesson3 = new Lesson();
+        lesson3.setNumber(1);
+        lesson3.setDate(date2);
+
+        Lesson lesson4 = new Lesson();
+        lesson4.setNumber(2);
+        lesson4.setDate(date2);
+
+        List<Lesson> messedInputList = Arrays.asList(lesson2, lesson3, lesson4, lesson1);
+
+        List<LessonsForDayDto> expected = Arrays.asList(
+                new LessonsForDayDto(Arrays.asList(lesson1, lesson2), date1),
+                new LessonsForDayDto(Arrays.asList(lesson3, lesson4), date2)
+        );
+
+        assertEquals(expected, lessonService.splitLessonListToLessonsForDayList(messedInputList));
     }
 }

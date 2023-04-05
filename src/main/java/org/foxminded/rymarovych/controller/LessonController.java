@@ -1,6 +1,7 @@
 package org.foxminded.rymarovych.controller;
 
 import org.foxminded.rymarovych.model.Lesson;
+import org.foxminded.rymarovych.model.dto.PersonalScheduleForDateRangeDto;
 import org.foxminded.rymarovych.service.abstractions.LessonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,13 @@ public class LessonController {
     static final String REQUEST_RECEIVING_LOG_MESSAGE = " HTTP request received";
 
     static final String REDIRECT_TO_LESSONS_MENU = "redirect:/lessons";
-
     static final String REDIRECT_TO_LESSON_SHOW = "redirect:/lessons/show/";
 
     static final String ERROR_MESSAGE_ATTR = "errorMessage";
-
     static final String LESSON_ATTR = "lesson";
+    static final String GROUPS_ATTR = "groups";
+    static final String TEACHERS_ATTR = "teachers";
+    static final String LESSONS_FOR_DAYS_ATTR = "lessonsForDays";
 
 
     private final LessonService lessonService;
@@ -36,7 +38,7 @@ public class LessonController {
     }
 
 
-    @GetMapping("")
+    @GetMapping()
     public String index() {
         LOGGER.debug("/lessons GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
@@ -47,7 +49,44 @@ public class LessonController {
     public String all(Model model) {
         LOGGER.debug("/lessons/all GET" + REQUEST_RECEIVING_LOG_MESSAGE);
 
-        model.addAttribute("lessonsForDays", lessonService.getAllLessonsForDaysSortedList());
+        model.addAttribute(LESSONS_FOR_DAYS_ATTR, lessonService.getAllLessonsForDaysSortedList());
+        return "lesson/list";
+    }
+
+    @GetMapping("/schedule-select/student")
+    public String selectStudentSchedule(Model model) {
+        LOGGER.debug("/lessons/schedule-select/student GET" + REQUEST_RECEIVING_LOG_MESSAGE);
+
+        model.addAttribute("personalScheduleDto", new PersonalScheduleForDateRangeDto());
+        model.addAttribute(GROUPS_ATTR, lessonService.getAllGroups());
+
+        return "lesson/student-schedule-selector";
+    }
+
+    @GetMapping("/schedule-select/teacher")
+    public String selectTeacherSchedule(Model model) {
+        LOGGER.debug("/lessons/schedule-select/teacher GET" + REQUEST_RECEIVING_LOG_MESSAGE);
+
+        model.addAttribute("personalScheduleDto", new PersonalScheduleForDateRangeDto());
+        model.addAttribute(TEACHERS_ATTR, lessonService.getAllTeachers());
+
+        return "lesson/teacher-schedule-selector";
+    }
+
+    @GetMapping("/schedule/{role}")
+    public String getPersonalSchedule(@PathVariable("role") String role, @ModelAttribute("personalScheduleDto") PersonalScheduleForDateRangeDto personalScheduleDto, Model model) {
+        LOGGER.debug("/lessons/schedule/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, role);
+
+        switch (role) {
+            case "student" -> model.addAttribute(LESSONS_FOR_DAYS_ATTR,
+                    lessonService.getLessonsForDaysSortedListByGroupAndDateRange(personalScheduleDto.getEntityId(), personalScheduleDto.getRangeStartDate(), personalScheduleDto.getRangeEndDate()));
+
+            case "teacher" -> model.addAttribute(LESSONS_FOR_DAYS_ATTR,
+                    lessonService.getLessonsForDaysSortedListByTeacherAndDateRange(personalScheduleDto.getEntityId(), personalScheduleDto.getRangeStartDate(), personalScheduleDto.getRangeEndDate()));
+
+            default -> model.addAttribute(ERROR_MESSAGE_ATTR, "Role not recognized");
+        }
+
         return "lesson/list";
     }
 
@@ -67,8 +106,8 @@ public class LessonController {
         model.addAttribute(LESSON_ATTR, new Lesson());
 
         model.addAttribute("courses", lessonService.getAllCourses());
-        model.addAttribute("teachers", lessonService.getAllTeachers());
-        model.addAttribute("groups", lessonService.getAllGroups());
+        model.addAttribute(TEACHERS_ATTR, lessonService.getAllTeachers());
+        model.addAttribute(GROUPS_ATTR, lessonService.getAllGroups());
 
         return "lesson/new";
     }
@@ -106,7 +145,7 @@ public class LessonController {
             model.addAttribute(LESSON_ATTR, lesson);
 
             model.addAttribute("courses", lessonService.getAllCourses());
-            model.addAttribute("teachers", lessonService.getAllTeachers());
+            model.addAttribute(TEACHERS_ATTR, lessonService.getAllTeachers());
 
         } else {
             LOGGER.warn("Not found Lesson to edit by ID: {}", id);
@@ -140,7 +179,7 @@ public class LessonController {
         LOGGER.debug("/lessons/group-relation/add/{} GET" + REQUEST_RECEIVING_LOG_MESSAGE, lessonId);
 
         model.addAttribute("lessonId", lessonId);
-        model.addAttribute("groups", lessonService.getUnlinkedGroups(lessonId));
+        model.addAttribute(GROUPS_ATTR, lessonService.getUnlinkedGroups(lessonId));
 
         return "/lesson/add-group";
     }

@@ -3,6 +3,7 @@ package org.foxminded.rymarovych.controller;
 import org.foxminded.rymarovych.model.Course;
 import org.foxminded.rymarovych.model.Lesson;
 import org.foxminded.rymarovych.model.Teacher;
+import org.foxminded.rymarovych.model.dto.PersonalScheduleForDateRangeDto;
 import org.foxminded.rymarovych.service.abstractions.LessonService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,60 @@ class LessonControllerTest {
         Teacher teacher = new Teacher(12L, "firstname", "lastname", "degree", null, null);
 
         lesson = new Lesson(4L, 2, "Zoom", new SimpleDateFormat("yyyyMMdd").parse("20200424"), course, teacher, null);
+    }
+
+
+    @Test
+    void getPersonalSchedule_shouldCallStudentMethod_IfRoleIsStudent() throws Exception {
+        String role = "student";
+
+        PersonalScheduleForDateRangeDto personalScheduleDto = new PersonalScheduleForDateRangeDto(4L,
+                new SimpleDateFormat("yyyyMMdd").parse("20230424"),
+                new SimpleDateFormat("yyyyMMdd").parse("20230621")
+        );
+
+        mvc.perform(get("/lessons/schedule/" + role)
+                .flashAttr("personalScheduleDto", personalScheduleDto));
+
+        verify(lessonService).getLessonsForDaysSortedListByGroupAndDateRange(personalScheduleDto.getEntityId(),
+                personalScheduleDto.getRangeStartDate(), personalScheduleDto.getRangeEndDate());
+
+        verify(lessonService, never()).getLessonsForDaysSortedListByTeacherAndDateRange(any(), any(), any());
+    }
+
+    @Test
+    void getPersonalSchedule_shouldCallTeacherMethod_IfRoleIsTeacher() throws Exception {
+        String role = "teacher";
+
+        PersonalScheduleForDateRangeDto personalScheduleDto = new PersonalScheduleForDateRangeDto(4L,
+                new SimpleDateFormat("yyyyMMdd").parse("20230424"),
+                new SimpleDateFormat("yyyyMMdd").parse("20230621")
+        );
+
+        mvc.perform(get("/lessons/schedule/" + role)
+                .flashAttr("personalScheduleDto", personalScheduleDto));
+
+        verify(lessonService).getLessonsForDaysSortedListByTeacherAndDateRange(personalScheduleDto.getEntityId(),
+                personalScheduleDto.getRangeStartDate(), personalScheduleDto.getRangeEndDate());
+
+        verify(lessonService, never()).getLessonsForDaysSortedListByGroupAndDateRange(any(), any(), any());
+    }
+
+    @Test
+    void getPersonalSchedule_shouldCallNoMethodAndReturnError_IfRoleIsUnknown() throws Exception {
+        String role = "someunknownrole";
+
+        PersonalScheduleForDateRangeDto personalScheduleDto = new PersonalScheduleForDateRangeDto(4L,
+                new SimpleDateFormat("yyyyMMdd").parse("20230424"),
+                new SimpleDateFormat("yyyyMMdd").parse("20230621")
+        );
+
+        mvc.perform(get("/lessons/schedule/" + role)
+                .flashAttr("personalScheduleDto", personalScheduleDto))
+                .andExpect(model().attributeExists("errorMessage"));
+
+        verify(lessonService, never()).getLessonsForDaysSortedListByGroupAndDateRange(any(), any(), any());
+        verify(lessonService, never()).getLessonsForDaysSortedListByTeacherAndDateRange(any(), any(), any());
     }
 
 
