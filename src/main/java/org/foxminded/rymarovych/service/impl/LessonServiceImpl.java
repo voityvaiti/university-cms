@@ -16,7 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Date;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +57,7 @@ public class LessonServiceImpl implements LessonService {
 
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
 
-        if(optionalGroup.isPresent()) {
+        if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
 
             LOGGER.debug("Found Group to get LessonsForDays list: {}", group);
@@ -81,7 +86,7 @@ public class LessonServiceImpl implements LessonService {
 
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
 
-        if(optionalTeacher.isPresent()) {
+        if (optionalTeacher.isPresent()) {
             Teacher teacher = optionalTeacher.get();
 
             LOGGER.debug("Found Teacher to get LessonsForDays list: {}", teacher);
@@ -240,9 +245,9 @@ public class LessonServiceImpl implements LessonService {
 
     public List<LessonsForDayDto> splitLessonListToLessonsForDayList(List<Lesson> lessons) {
 
-        return lessons.stream()
-                .collect(Collectors.groupingBy(Lesson::getDate))
-                .entrySet().stream()
+        return lessons.parallelStream()
+                .collect(Collectors.groupingByConcurrent(Lesson::getDate))
+                .entrySet().parallelStream()
                 .map(e -> {
                     List<Lesson> sortedLessons = e.getValue().stream()
                             .sorted(Comparator.comparing(Lesson::getNumber))
