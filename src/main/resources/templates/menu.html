@@ -19,12 +19,12 @@
     <div class="row mb-3">
 
         <div class="col d-flex justify-content-center align-items-center">
-            <a href="/students" class="w-50 btn btn-info border-light text-center text-info"
+            <a th:href="@{/students}" class="w-50 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">Students</a>
         </div>
 
         <div class="col d-flex justify-content-center align-items-center">
-            <a href="/teachers" class="w-50 btn btn-info border-light text-center text-info"
+            <a th:href="@{/teachers}" class="w-50 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">Teachers</a>
         </div>
     </div>
@@ -32,12 +32,12 @@
     <div class="row mb-3">
 
         <div class="col d-flex justify-content-center align-items-center">
-            <a href="/groups" class="w-50 btn btn-info border-light text-center text-info"
+            <a th:href="@{/groups}" class="w-50 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">Groups</a>
         </div>
 
         <div class="col d-flex justify-content-center align-items-center">
-            <a href="/courses" class="w-50 btn btn-info border-light text-center text-info"
+            <a th:href="@{/courses}" class="w-50 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">Courses</a>
         </div>
 
@@ -46,17 +46,17 @@
     <div class="row mb-3">
 
         <div class="col d-flex justify-content-center align-items-center">
-            <a href="/lessons" class="w-75 btn btn-info border-light text-center text-info"
+            <a th:href="@{/lessons}" class="w-75 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">Lessons</a>
         </div>
 
         <div sec:authorize="hasAnyAuthority('STUDENT', 'STUFF', 'ADMIN')" class="col d-flex justify-content-center align-items-center">
-            <a href="/lessons/schedule-select/student" class="w-75 btn btn-info border-light text-center text-info"
+            <a th:href="@{/lessons/schedule-select/student}" class="w-75 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">My Schedule <span sec:authorize="hasAnyAuthority('STUFF', 'ADMIN')">(Student)</span></a>
         </div>
 
         <div sec:authorize="hasAnyAuthority('TEACHER', 'STUFF', 'ADMIN')" class="col d-flex justify-content-center align-items-center">
-            <a href="/lessons/schedule-select/teacher" class="w-75 btn btn-info border-light text-center text-info"
+            <a th:href="@{/lessons/schedule-select/teacher}" class="w-75 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">My Schedule <span sec:authorize="hasAnyAuthority('STUFF', 'ADMIN')">(Teacher)</span></a>
         </div>
 
@@ -65,12 +65,12 @@
     <div class="row mb-3">
 
         <div sec:authorize="hasAuthority('ADMIN')" class="col d-flex justify-content-center align-items-center">
-            <a href="/users" class="w-50 btn btn-info border-dark text-center text-info"
+            <a th:href="@{/users}" class="w-50 btn btn-info border-dark text-center text-info"
                style="background-color: black;">USERS</a>
         </div>
 
         <div class="col d-flex justify-content-center align-items-center">
-            <a href="/users/current" class="w-50 btn btn-info border-dark text-center text-info"
+            <a th:href="@{/users/current}" class="w-50 btn btn-info border-dark text-center text-info"
                style="background-color: black;">PROFILE</a>
         </div>
 
@@ -78,7 +78,7 @@
 
     <div class="row mb-3 mt-4">
         <div class="col d-flex justify-content-center align-items-center">
-            <a href="/logout" class="w-25 btn btn-info border-light text-center text-info"
+            <a th:href="@{/logout}" class="w-25 btn btn-info border-light text-center text-info"
                style="background-color: #fff;">LOGOUT</a>
         </div>
     </div>
